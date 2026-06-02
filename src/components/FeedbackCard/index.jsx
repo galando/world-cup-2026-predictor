@@ -19,7 +19,7 @@ function getScoreProb(homeGuess, awayGuess, topScores, scoreMatrix) {
 export default function FeedbackCard({ homeGuess, awayGuess, probs, topScores, scoreMatrix }) {
   const { t } = useTranslation();
 
-  const pct = Math.round(getScoreProb(homeGuess, awayGuess, topScores, scoreMatrix) * 100);
+  const pct = Math.round(getScoreProb(homeGuess, awayGuess, topScores, scoreMatrix) * 1000) / 10;
 
   return (
     <Card className={styles.card}>

@@ -59,7 +59,7 @@ export default function HomeScreen() {
     }
 
     return list;
-  }, [matches, filter, teamCode]);
+  }, [matches, filter, subFilter, teamCode]);
 
   if (matchesLoading) {
     return (

@@ -27,7 +27,7 @@ export default function ScorelineGrid({ matrix, maxGoals = 6, onSelect }) {
           <span className={styles.headerCell}>{h}</span>
           {Array.from({ length: maxGoals + 1 }, (_, a) => {
             const cell = grid.rows.find(r => r.h === h && r.a === a);
-            const pct = cell ? Math.round(cell.p * 100) : 0;
+            const pct = cell ? Math.round(cell.p * 1000) / 10 : 0;
             const intensity = cell ? cell.p / grid.maxP : 0;
             return (
               <button
