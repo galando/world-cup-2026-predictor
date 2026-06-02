@@ -1,0 +1,69 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 32px;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+.backBtn,
+.shareBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--ink);
+}
+.backBtn:active,
+.shareBtn:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+.topTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.progress {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.championCard {
+  text-align: center;
+}
+.championLabel {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-dim);
+  margin-bottom: 4px;
+}
+
+.roundLabel {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  margin-top: 8px;
+  margin-bottom: 6px;
+}
+
+.roundGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}

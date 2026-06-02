@@ -1,0 +1,13 @@
+.bar {
+  display: flex;
+  border-radius: 99px;
+  overflow: hidden;
+  width: 100%;
+}
+.sm { height: 4px; }
+.md { height: 6px; }
+.lg { height: 8px; }
+.seg {
+  display: block;
+  transition: width 0.3s ease;
+}

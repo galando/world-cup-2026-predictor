@@ -1,0 +1,27 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-btn);
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  min-height: 44px;
+  transition: background 0.2s, opacity 0.2s;
+  cursor: pointer;
+}
+.btn:active { opacity: 0.85; }
+.primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.sm {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  min-height: 36px;
+}

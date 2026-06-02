@@ -1,0 +1,140 @@
+{
+  "app": {
+    "title": "מונדיאל 2026",
+    "subtitle": "כל אחוז מגיע ממודל שקוף"
+  },
+  "nav": {
+    "back": "חזרה",
+    "settings": "הגדרות",
+    "home": "ראשי",
+    "bracket": "בית הניחושים"
+  },
+  "home": {
+    "title": "מונדיאל 2026",
+    "subtitle": "כל אחוז מגיע ממודל שקוף",
+    "filterAll": "הכל",
+    "filterMyTeam": "הנבחרת שלי",
+    "filterGroup": "לפי בית",
+    "filterStage": "לפי שלב",
+    "bracketBanner": "חזה את הטורניר כולו ←",
+    "emptyFilter": "אין משחקים מתאימים",
+    "teamEliminated": "הנבחרת שלך סיימה את הדרך",
+    "lastUpdated": "עדכון אחרון"
+  },
+  "match": {
+    "vs": "נגד",
+    "date": "תאריך",
+    "venue": "אצטדיון",
+    "time": "שעה",
+    "stage": "שלב",
+    "finished": "הסתיים",
+    "scheduled": "מתוכנן",
+    "live": "חי",
+    "groupLabel": "בית"
+  },
+  "stage": {
+    "group": "שלב הבתים",
+    "r32": "שלב 32 האחרונות",
+    "r16": "שמינית הגמר",
+    "qf": "רבע הגמר",
+    "sf": "חצי הגמר",
+    "final": "גמר",
+    "thirdPlace": "משחק על המקום השלישי"
+  },
+  "prediction": {
+    "title": "תחזית המודל",
+    "home": "ניצחון בית",
+    "draw": "תיקו",
+    "away": "ניצחון חוץ",
+    "expectedGoals": "שערים צפויים",
+    "whyPanel": "איך הגענו לאחוזים האלה?",
+    "topScores": "תוצאות סבירות",
+    "scoreMatrix": "טבלת תוצאות",
+    "includingPenalties": "כולל הארכה ופנדלים",
+    "qualifyTitle": "מי עולה לשלב הבא?"
+  },
+  "factor": {
+    "base": "בסיס",
+    "attack": "כוח התקפה",
+    "defence": "הגנת יריב",
+    "form": "כושר אחרון",
+    "venue": "יתרון מגרש"
+  },
+  "guess": {
+    "title": "נחש את התוצאה",
+    "submit": "בדוק את הניחוש שלי",
+    "clear": "נקה",
+    "feedback": "המודל נותן לזה {{pct}}%",
+    "myGuess": "הניחוש שלי",
+    "modelPredict": "המודל מנבא",
+    "saved": "הניחוש נשמר"
+  },
+  "result": {
+    "title": "תוצאה סופית",
+    "correctWinner": "ניחשת נכון את המנצח!",
+    "correctScore": "ניחשת את התוצאה המדויקת!",
+    "missed": "לא קרוב, אבל זה המודל שטעה, לא אתה"
+  },
+  "team": {
+    "fifaRank": "דירוג פיפ\"א",
+    "elo": "מד כושר",
+    "form": "כושר",
+    "avgGoals": "ממוצע שערים",
+    "avgConceded": "ממוצע ספיגות",
+    "tournamentMatches": "משחקי הטורניר",
+    "headToHead": "מפגשים ישירים"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "languageSection": "שפת ממשק",
+    "languageHe": "עברית",
+    "languageEn": "English",
+    "themeSection": "ערכת הצבעים",
+    "themeDefault": "ירוק אצטדיון (ברירת מחדל)",
+    "favTeamSection": "נבחרת אהובה",
+    "clearTeam": "נקה בחירה",
+    "noThemeTooltip": "בקרוב"
+  },
+  "bracket": {
+    "title": "חיזוי הטורניר כולו",
+    "fillByModel": "השאר לפי המודל",
+    "shareBracket": "שתף את ה-Bracket שלי",
+    "myPicks": "בחירות שלי",
+    "modelPicks": "מהמודל",
+    "champion": "אלופה",
+    "progress": "שלבים מולאו",
+    "resetOverrides": "אפס הכל"
+  },
+  "share": {
+    "brand": "MUNDIAL PREDICTOR",
+    "myGuess": "הניחוש שלי",
+    "url": "mundial-predictor.app"
+  },
+  "offline": {
+    "banner": "מצב לא מקוון — הנתונים עשויים שלא להיות מעודכנים"
+  },
+  "install": {
+    "banner": "הוסף למסך הבית",
+    "dismiss": "לא עכשיו"
+  },
+  "form": {
+    "win": "נ",
+    "draw": "ת",
+    "loss": "ה"
+  },
+  "error": {
+    "loadFailed": "טעינת הנתונים נכשלה",
+    "matchNotFound": "משחק לא נמצא",
+    "teamNotFound": "נבחרת לא נמצאה",
+    "retry": "נסה שוב"
+  },
+  "loading": {
+    "text": "טוען..."
+  },
+  "calibration": {
+    "played": "משחקים ששוחקו",
+    "winnerHit": "ניבא נכון את המנצח",
+    "exactHit": "ניבא את התוצאה המדויקת",
+    "brier": "ציון ברייר"
+  }
+}

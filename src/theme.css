@@ -1,0 +1,19 @@
+/* theme.css — default pitch green theme */
+:root {
+  --ink: #f3f7f4;
+  --ink-dim: rgba(243, 247, 244, 0.62);
+  --ink-faint: rgba(243, 247, 244, 0.40);
+  --win:   #46c98a;
+  --drawc: #d8b24a;
+  --loss:  #e0726a;
+  --away:  #8ba2af;
+  --field:       #0d1f14;
+  --field2:      #091509;
+  --card:        #132819;
+  --line:        rgba(255, 255, 255, 0.05);
+  --accent:      #46c98a;
+  --accent-ink:  #07140c;
+  --glow:        rgba(70, 201, 138, 0.40);
+  --radius-card: 20px;
+  --radius-btn:  999px;
+}

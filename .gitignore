@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.vite/
+*.local
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+coverage/
+scripts/cache/
+public/data/*.json
+!public/data/.gitkeep

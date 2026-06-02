@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "stage": "build",
+  "timestamp": "2026-06-02T16:10:00Z",
+  "files_created": [
+    "src/theme.css",
+    "src/index.css",
+    "src/App.jsx",
+    "src/screens/HomeScreen/index.jsx",
+    "src/screens/PreMatchScreen/index.jsx",
+    "src/screens/TeamScreen/index.jsx",
+    "src/screens/BracketScreen/index.jsx",
+    "src/screens/TeamPickerScreen/index.jsx",
+    "src/hooks/useData.js",
+    "src/hooks/useTheme.js",
+    "src/hooks/useLang.js",
+    "src/hooks/useGuess.js",
+    "src/i18n/he.json",
+    "src/i18n/en.json",
+    "src/i18n/index.js",
+    "src/share/renderToImage.js",
+    "src/share/ShareCardSquare/index.jsx",
+    "src/share/ShareCardSquare/styles.module.css",
+    "src/share/BracketCard/index.jsx",
+    "src/share/BracketCard/styles.module.css",
+    "src/share/__tests__/renderToImage.test.js",
+    "src/components/OfflineBanner/index.jsx",
+    "src/components/OfflineBanner/styles.module.css",
+    "src/components/InstallBanner/index.jsx",
+    "src/components/InstallBanner/styles.module.css",
+    "public/icon-192.png",
+    "public/icon-512.png"
+  ],
+  "files_modified": [
+    "src/main.jsx",
+    "vite.config.js",
+    "package.json",
+    "src/screens/BracketScreen/styles.module.css"
+  ],
+  "test_results": {
+    "total": 64,
+    "passed": 64,
+    "failed": 0
+  },
+  "deviations": {
+    "unplanned_files": [
+      "src/components/OfflineBanner/ — PWA offline banner (Task 21)",
+      "src/components/InstallBanner/ — PWA install prompt banner (Task 21)",
+      "public/icon-192.png — PWA icon placeholder (Task 21)",
+      "public/icon-512.png — PWA icon placeholder (Task 21)"
+    ],
+    "skipped_tasks": [],
+    "approach_changes": [
+      {
+        "id": 11,
+        "planned": "React Router v6",
+        "actual": "React Router v7 (createHashRouter API compatible)",
+        "reason": "package.json had react-router-dom v7.6.0 installed"
+      }
+    ]
+  },
+  "scenarios_covered": [
+    "User shares match prediction",
+    "User shares bracket",
+    "App works offline",
+    "User views pre-match prediction",
+    "User switches language",
+    "User selects a team theme",
+    "User submits a score guess"
+  ],
+  "tasks_completed": 22,
+  "tasks_total": 22
+}

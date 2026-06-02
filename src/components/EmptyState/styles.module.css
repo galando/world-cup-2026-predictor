@@ -1,0 +1,11 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+.text {
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+  text-align: center;
+}

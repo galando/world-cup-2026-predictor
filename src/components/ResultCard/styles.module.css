@@ -1,0 +1,19 @@
+.card {
+  text-align: center;
+}
+.title {
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  margin-bottom: 4px;
+}
+.score {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+.msg {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}

@@ -1,0 +1,150 @@
+{
+  "description": "FIFA R32 bracket slot assignments for 2026 World Cup. Each R32 match has a fixed slot for the group winner/runner-up and a conditional slot for the best third-place team. The third-place opponent depends on which 8 of 12 third-place teams qualify (495 combinations per FIFA Annex C).",
+  "r32Matches": [
+    {
+      "match": 73,
+      "slot1": "2A",
+      "slot2": "2B",
+      "venue": "Inglewood",
+      "date": "2026-06-28"
+    },
+    {
+      "match": 74,
+      "slot1": "1C",
+      "slot2": "2F",
+      "venue": "Foxborough",
+      "date": "2026-06-29"
+    },
+    {
+      "match": 75,
+      "slot1": "1E",
+      "slot2": "3ABCD F",
+      "venue": "East Rutherford",
+      "date": "2026-06-30"
+    },
+    {
+      "match": 76,
+      "slot1": "1F",
+      "slot2": "2C",
+      "venue": "Guadalupe",
+      "date": "2026-06-29"
+    },
+    {
+      "match": 77,
+      "slot1": "2E",
+      "slot2": "2I",
+      "venue": "Houston",
+      "date": "2026-07-04"
+    },
+    {
+      "match": 78,
+      "slot1": "1I",
+      "slot2": "3CDEFGH",
+      "venue": "Foxborough",
+      "date": "2026-06-30"
+    },
+    {
+      "match": 79,
+      "slot1": "1A",
+      "slot2": "3CE FGH I",
+      "venue": "Mexico City",
+      "date": "2026-06-30"
+    },
+    {
+      "match": 80,
+      "slot1": "1L",
+      "slot2": "3EHI JK",
+      "venue": "Atlanta",
+      "date": "2026-07-01"
+    },
+    {
+      "match": 81,
+      "slot1": "1G",
+      "slot2": "3AEHI J",
+      "venue": "Seattle",
+      "date": "2026-07-01"
+    },
+    {
+      "match": 82,
+      "slot1": "1D",
+      "slot2": "3B EFG I J",
+      "venue": "Santa Clara",
+      "date": "2026-07-01"
+    },
+    {
+      "match": 83,
+      "slot1": "1H",
+      "slot2": "2J",
+      "venue": "Toronto",
+      "date": "2026-07-02"
+    },
+    {
+      "match": 84,
+      "slot1": "2K",
+      "slot2": "2L",
+      "venue": "Inglewood",
+      "date": "2026-07-02"
+    },
+    {
+      "match": 85,
+      "slot1": "1B",
+      "slot2": "3E FGH I J",
+      "venue": "Kansas City",
+      "date": "2026-07-03"
+    },
+    {
+      "match": 86,
+      "slot1": "2D",
+      "slot2": "2G",
+      "venue": "Arlington",
+      "date": "2026-07-03"
+    },
+    {
+      "match": 87,
+      "slot1": "1J",
+      "slot2": "2H",
+      "venue": "Miami Gardens",
+      "date": "2026-07-03"
+    },
+    {
+      "match": 88,
+      "slot1": "1K",
+      "slot2": "3DE IJK L",
+      "venue": "Vancouver",
+      "date": "2026-07-02"
+    }
+  ],
+  "r16Matches": [
+    { "match": 89, "from": [73, 75], "venue": "Philadelphia", "date": "2026-07-04" },
+    { "match": 90, "from": [74, 77], "venue": "Houston", "date": "2026-07-04" },
+    { "match": 91, "from": [76, 78], "venue": "East Rutherford", "date": "2026-07-05" },
+    { "match": 92, "from": [79, 80], "venue": "Mexico City", "date": "2026-07-05" },
+    { "match": 93, "from": [83, 84], "venue": "Seattle", "date": "2026-07-06" },
+    { "match": 94, "from": [81, 82], "venue": "Arlington", "date": "2026-07-06" },
+    { "match": 95, "from": [86, 88], "venue": "Atlanta", "date": "2026-07-07" },
+    { "match": 96, "from": [85, 87], "venue": "Vancouver", "date": "2026-07-07" }
+  ],
+  "qfMatches": [
+    { "match": 97, "from": [89, 90], "venue": "Foxborough", "date": "2026-07-09" },
+    { "match": 98, "from": [93, 94], "venue": "Inglewood", "date": "2026-07-10" },
+    { "match": 99, "from": [91, 92], "venue": "Miami Gardens", "date": "2026-07-11" },
+    { "match": 100, "from": [95, 96], "venue": "Kansas City", "date": "2026-07-11" }
+  ],
+  "sfMatches": [
+    { "match": 101, "from": [97, 98], "venue": "Arlington", "date": "2026-07-14" },
+    { "match": 102, "from": [99, 100], "venue": "Atlanta", "date": "2026-07-15" }
+  ],
+  "thirdPlace": { "match": 103, "from": [101, 102], "venue": "Miami Gardens", "date": "2026-07-18" },
+  "final": { "match": 104, "from": [101, 102], "venue": "East Rutherford", "date": "2026-07-19" },
+  "thirdPlaceLookup": {
+    "description": "Maps which third-place groups are eligible for each R32 match. Determined by FIFA Annex C based on which 8 third-place teams qualify. Key is the match number, value is the set of groups whose third-place team can be assigned.",
+    "75": ["A", "B", "C", "D", "F"],
+    "78": ["C", "D", "F", "G", "H"],
+    "79": ["C", "E", "F", "H", "I"],
+    "80": ["E", "H", "I", "J", "K"],
+    "81": ["A", "E", "H", "I", "J"],
+    "82": ["B", "E", "F", "I", "J"],
+    "85": ["E", "F", "G", "I", "J"],
+    "88": ["D", "E", "I", "J", "L"]
+  }
+}

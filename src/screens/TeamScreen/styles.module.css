@@ -1,0 +1,85 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 32px;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 4px;
+}
+.backBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--ink);
+}
+.backBtn:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 16px;
+}
+.heroName {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.heroStats {
+  display: flex;
+  gap: 16px;
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.statLabel {
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+}
+.statVal {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 8px;
+  color: var(--ink-dim);
+}
+.matchList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.notFound {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--ink-dim);
+  font-size: 1.1rem;
+}

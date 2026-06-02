@@ -1,0 +1,40 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.7rem;
+}
+.header {
+  display: flex;
+  gap: 2px;
+}
+.headerCell {
+  width: 36px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-dim);
+  font-weight: 600;
+}
+.row {
+  display: flex;
+  gap: 2px;
+}
+.cell {
+  width: 36px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.65rem;
+  transition: transform 0.1s, opacity 0.15s;
+  cursor: pointer;
+}
+.cell:active {
+  transform: scale(0.92);
+}

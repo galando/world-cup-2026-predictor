@@ -1,0 +1,28 @@
+.wrap {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 0;
+}
+.wrap::-webkit-scrollbar { display: none; }
+.chip {
+  white-space: nowrap;
+  padding: 8px 14px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-dim);
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  min-height: 36px;
+}
+.chip:active { opacity: 0.8; }
+.active {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}

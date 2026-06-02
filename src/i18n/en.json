@@ -1,0 +1,140 @@
+{
+  "app": {
+    "title": "World Cup 2026",
+    "subtitle": "Every percent comes from a transparent model"
+  },
+  "nav": {
+    "back": "Back",
+    "settings": "Settings",
+    "home": "Home",
+    "bracket": "Bracket"
+  },
+  "home": {
+    "title": "World Cup 2026",
+    "subtitle": "Every percent comes from a transparent model",
+    "filterAll": "All",
+    "filterMyTeam": "My Team",
+    "filterGroup": "By Group",
+    "filterStage": "By Stage",
+    "bracketBanner": "Predict the entire tournament →",
+    "emptyFilter": "No matching matches",
+    "teamEliminated": "Your team has been eliminated",
+    "lastUpdated": "Last updated"
+  },
+  "match": {
+    "vs": "vs",
+    "date": "Date",
+    "venue": "Venue",
+    "time": "Time",
+    "stage": "Stage",
+    "finished": "Finished",
+    "scheduled": "Scheduled",
+    "live": "Live",
+    "groupLabel": "Group"
+  },
+  "stage": {
+    "group": "Group Stage",
+    "r32": "Round of 32",
+    "r16": "Round of 16",
+    "qf": "Quarterfinals",
+    "sf": "Semifinals",
+    "final": "Final",
+    "thirdPlace": "Third Place Match"
+  },
+  "prediction": {
+    "title": "Model Prediction",
+    "home": "Home Win",
+    "draw": "Draw",
+    "away": "Away Win",
+    "expectedGoals": "Expected Goals",
+    "whyPanel": "How did we get these percentages?",
+    "topScores": "Likely Scores",
+    "scoreMatrix": "Score Matrix",
+    "includingPenalties": "Including extra time and penalties",
+    "qualifyTitle": "Who advances?"
+  },
+  "factor": {
+    "base": "Base",
+    "attack": "Attack Strength",
+    "defence": "Opponent Defence",
+    "form": "Recent Form",
+    "venue": "Home Advantage"
+  },
+  "guess": {
+    "title": "Guess the Score",
+    "submit": "Check My Guess",
+    "clear": "Clear",
+    "feedback": "The model gives this {{pct}}%",
+    "myGuess": "My Guess",
+    "modelPredict": "Model Predicts",
+    "saved": "Guess saved"
+  },
+  "result": {
+    "title": "Final Result",
+    "correctWinner": "You guessed the winner correctly!",
+    "correctScore": "You guessed the exact score!",
+    "missed": "Not close, but the model was wrong, not you"
+  },
+  "team": {
+    "fifaRank": "FIFA Ranking",
+    "elo": "Elo Rating",
+    "form": "Form",
+    "avgGoals": "Avg Goals",
+    "avgConceded": "Avg Conceded",
+    "tournamentMatches": "Tournament Matches",
+    "headToHead": "Head to Head"
+  },
+  "settings": {
+    "title": "Settings",
+    "languageSection": "Interface Language",
+    "languageHe": "עברית",
+    "languageEn": "English",
+    "themeSection": "Color Theme",
+    "themeDefault": "Pitch Green (Default)",
+    "favTeamSection": "Favorite Team",
+    "clearTeam": "Clear Selection",
+    "noThemeTooltip": "Coming soon"
+  },
+  "bracket": {
+    "title": "Full Tournament Prediction",
+    "fillByModel": "Fill by Model",
+    "shareBracket": "Share My Bracket",
+    "myPicks": "My Picks",
+    "modelPicks": "By Model",
+    "champion": "Champion",
+    "progress": "Stages filled",
+    "resetOverrides": "Reset All"
+  },
+  "share": {
+    "brand": "MUNDIAL PREDICTOR",
+    "myGuess": "My Guess",
+    "url": "mundial-predictor.app"
+  },
+  "offline": {
+    "banner": "Offline mode — data may not be up to date"
+  },
+  "install": {
+    "banner": "Add to Home Screen",
+    "dismiss": "Not now"
+  },
+  "form": {
+    "win": "W",
+    "draw": "D",
+    "loss": "L"
+  },
+  "error": {
+    "loadFailed": "Failed to load data",
+    "matchNotFound": "Match not found",
+    "teamNotFound": "Team not found",
+    "retry": "Retry"
+  },
+  "loading": {
+    "text": "Loading..."
+  },
+  "calibration": {
+    "played": "Matches played",
+    "winnerHit": "Correct winner predicted",
+    "exactHit": "Exact score predicted",
+    "brier": "Brier score"
+  }
+}

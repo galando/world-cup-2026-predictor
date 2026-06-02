@@ -1,0 +1,85 @@
+.card {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+}
+.card:active {
+  transform: scale(0.98);
+}
+.preferred {
+  border-color: #d4a843;
+  box-shadow: 0 0 12px rgba(212, 168, 67, 0.2);
+}
+.star {
+  position: absolute;
+  top: 8px;
+  inset-inline-start: 8px;
+  color: #d4a843;
+}
+.top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 0.75rem;
+}
+.group {
+  color: var(--ink-dim);
+  font-size: 0.7rem;
+}
+.date {
+  color: var(--ink-dim);
+  font-size: 0.7rem;
+  margin-inline-start: auto;
+}
+.body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+.teamName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+}
+.score {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.vs {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+.bars {
+  margin-top: 10px;
+}
+.venue {
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  text-align: center;
+}

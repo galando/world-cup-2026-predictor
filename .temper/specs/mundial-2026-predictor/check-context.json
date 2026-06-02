@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "stage": "check",
+  "timestamp": "2026-06-02T20:47:00Z",
+  "validation_results": {
+    "compile": "pass",
+    "tests": "pass",
+    "coverage_pct": null,
+    "lint": "skip",
+    "type_check": "skip",
+    "security": "pass"
+  },
+  "scenario_verification": {
+    "total": 20,
+    "passed": 17,
+    "failed": 0,
+    "missing": 3
+  },
+  "test_failures": [],
+  "fixes_verified": {
+    "accentInk_to_accent_ink": "pass (source fixed, build re-run to propagate to public/data)",
+    "prematch_topScores_fields": "pass (s.h, s.a, s.p confirmed)",
+    "matchcard_i18n_groupLabel": "pass (t('match.groupLabel') confirmed)",
+    "bracket_nameOf_i18n_language": "pass (i18n.language confirmed)"
+  },
+  "issues_found": [
+    {
+      "level": "INFO",
+      "description": "public/data/teams-meta.json had stale accentInk keys; fixed by re-running build-data.js",
+      "file": "public/data/teams-meta.json"
+    }
+  ]
+}

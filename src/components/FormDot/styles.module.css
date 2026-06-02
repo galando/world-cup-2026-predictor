@@ -1,0 +1,10 @@
+.dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.win { background-color: var(--win); }
+.draw { background-color: var(--drawc); }
+.loss { background-color: var(--loss); }

@@ -1,0 +1,61 @@
+.panel {
+  border-top: 1px solid var(--line);
+  margin-top: 4px;
+}
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 0;
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  gap: 8px;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 12px;
+}
+.teamBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.teamHeader {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.chainItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.chainLabel {
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+.chainMult {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.multiply {
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+  margin: 0 2px;
+}
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

@@ -1,0 +1,144 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 32px;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+/* Sticky top bar */
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  background: var(--field);
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 4px;
+}
+.backBtn,
+.shareBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--ink);
+}
+.backBtn:active,
+.shareBtn:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+.topTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+}
+
+/* Meta row */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dateText {
+  font-size: 0.8rem;
+  color: var(--ink-dim);
+}
+
+/* Prediction header */
+.predHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.predTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.donutToggle {
+  margin-inline-start: auto;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Section title */
+.sectionTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-dim);
+  margin-bottom: 10px;
+}
+
+/* Qualify block */
+.qualifyTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+.qualifyBars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.qualifyRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qualifyTrack {
+  flex: 1;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+.qualifyFill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--win);
+  transition: width 0.6s ease;
+}
+.qualifyFillLoss {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--loss);
+  transition: width 0.6s ease;
+}
+.qualifyPct {
+  font-weight: 700;
+  font-size: 0.9rem;
+  min-width: 38px;
+  text-align: center;
+}
+.qualifyLabel {
+  font-size: 0.85rem;
+  color: var(--ink-dim);
+  min-width: 60px;
+}
+.qualifyNote {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--ink-faint);
+}
+
+/* Not found */
+.notFound {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--ink-dim);
+  font-size: 1.1rem;
+}

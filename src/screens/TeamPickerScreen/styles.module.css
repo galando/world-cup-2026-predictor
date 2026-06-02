@@ -1,0 +1,141 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0 16px 32px;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+.backBtn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: var(--ink);
+}
+.backBtn:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+.topTitle {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.sectionTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+/* Language */
+.langRow {
+  display: flex;
+  gap: 8px;
+}
+.langBtn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-dim);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  min-height: 44px;
+}
+.langActive {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(70, 201, 138, 0.08);
+}
+
+/* Theme */
+.themeOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink-dim);
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  min-height: 44px;
+}
+.themeActive {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.themeSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+/* Team grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.teamItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  transition: background 0.15s;
+  position: relative;
+}
+.teamItem:active:not(.disabled) {
+  background: rgba(255, 255, 255, 0.04);
+}
+.disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.selected {
+  background: rgba(70, 201, 138, 0.08);
+}
+.teamFlagWrap {
+  position: relative;
+}
+.checkRing {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.teamLabel {
+  font-size: 0.6rem;
+  text-align: center;
+  color: var(--ink-dim);
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clearBtn {
+  margin-top: 12px;
+  width: 100%;
+}
