@@ -64,7 +64,7 @@
     "title": "Guess the Score",
     "submit": "Check My Guess",
     "clear": "Clear",
-    "feedback": "The model gives this {{pct}}%",
+    "feedback": "Exact scoreline probability: {{pct}}%",
     "myGuess": "My Guess",
     "modelPredict": "Model Predicts",
     "saved": "Guess saved"

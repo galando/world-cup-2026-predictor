@@ -256,6 +256,7 @@ export default function PreMatchScreen() {
           awayGuess={feedback.away}
           probs={pred.probs}
           topScores={pred.topScores}
+          scoreMatrix={pred.scoreMatrix}
         />
       )}
 
@@ -276,13 +277,11 @@ export default function PreMatchScreen() {
               homeScore={guess.home}
               awayScore={guess.away}
               feedbackText={
-                pred?.topScores?.find(
-                  s => s.h === guess.home && s.a === guess.away
-                )
-                  ? t('guess.feedback', { pct: Math.round(
-                      pred.topScores.find(s => s.h === guess.home && s.a === guess.away).p * 100
-                    ) })
-                  : null
+                (() => {
+                  const ts = pred?.topScores?.find(s => s.h === guess.home && s.a === guess.away);
+                  const p = ts ? ts.p : pred?.scoreMatrix?.[guess.home]?.[guess.away] ?? 0;
+                  return p > 0 ? t('guess.feedback', { pct: Math.round(p * 100) }) : null;
+                })()
               }
               probs={pred?.probs}
             />

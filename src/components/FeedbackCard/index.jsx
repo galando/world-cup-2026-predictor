@@ -3,13 +3,23 @@ import Card from '../Card';
 import MiniLean from '../MiniLean';
 import styles from './styles.module.css';
 
-export default function FeedbackCard({ homeGuess, awayGuess, probs, topScores }) {
+function getScoreProb(homeGuess, awayGuess, topScores, scoreMatrix) {
+  // Try topScores first (pre-computed)
+  const fromTop = topScores?.find(s => s.h === homeGuess && s.a === awayGuess);
+  if (fromTop) return fromTop.p;
+
+  // Fall back to scoreMatrix
+  if (scoreMatrix?.[homeGuess]?.[awayGuess] != null) {
+    return scoreMatrix[homeGuess][awayGuess];
+  }
+
+  return 0;
+}
+
+export default function FeedbackCard({ homeGuess, awayGuess, probs, topScores, scoreMatrix }) {
   const { t } = useTranslation();
 
-  const matchScore = topScores?.find(
-    s => s.h === homeGuess && s.a === awayGuess
-  );
-  const pct = matchScore ? Math.round(matchScore.p * 100) : 0;
+  const pct = Math.round(getScoreProb(homeGuess, awayGuess, topScores, scoreMatrix) * 100);
 
   return (
     <Card className={styles.card}>

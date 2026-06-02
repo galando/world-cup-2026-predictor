@@ -22,6 +22,7 @@ export default function HomeScreen() {
   const { data: lastUpdated } = useData('lastUpdated');
 
   const [filter, setFilter] = useState('all');
+  const [subFilter, setSubFilter] = useState(null);
 
   const filteredMatches = useMemo(() => {
     if (!matches) return [];
@@ -32,6 +33,14 @@ export default function HomeScreen() {
       list = list.filter(
         m => m.homeTeam === teamCode || m.awayTeam === teamCode,
       );
+    }
+
+    if (filter === 'group' && subFilter) {
+      list = list.filter(m => m.group === subFilter);
+    }
+
+    if (filter === 'stage' && subFilter) {
+      list = list.filter(m => m.stage === subFilter);
     }
 
     list.sort((a, b) => {
@@ -89,7 +98,12 @@ export default function HomeScreen() {
       )}
 
       {/* Filter */}
-      <FilterBar active={filter} onChange={setFilter} />
+      <FilterBar
+        active={filter}
+        onChange={(f) => { setFilter(f); setSubFilter(null); }}
+        subFilter={subFilter}
+        onSubFilter={setSubFilter}
+      />
 
       {/* Bracket banner */}
       <Card
