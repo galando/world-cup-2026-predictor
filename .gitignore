@@ -11,3 +11,5 @@ coverage/
 scripts/cache/
 public/data/*.json
 !public/data/.gitkeep
+.playwright-mcp/
+*.png

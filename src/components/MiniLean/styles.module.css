@@ -1,13 +1,26 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
 .bar {
   display: flex;
   border-radius: 99px;
   overflow: hidden;
   width: 100%;
 }
-.sm { height: 4px; }
-.md { height: 6px; }
-.lg { height: 8px; }
+.sm { height: 6px; }
+.md { height: 8px; }
+.lg { height: 10px; }
 .seg {
   display: block;
   transition: width 0.3s ease;
+}
+.labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0 1px;
 }

@@ -10,7 +10,7 @@
 html {
   direction: rtl;
   font-family: 'Rubik', sans-serif;
-  background-color: var(--field);
+  background-color: var(--field2);
   color: var(--ink);
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;

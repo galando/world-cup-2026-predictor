@@ -1,16 +1,18 @@
 .banner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
-  padding: 10px 16px;
-  background: rgba(70, 201, 138, 0.1);
-  border-bottom: 1px solid rgba(70, 201, 138, 0.2);
+  padding: 8px 14px;
+  border-radius: var(--radius-card);
+  background: rgba(70, 201, 138, 0.08);
+  border: 1px solid rgba(70, 201, 138, 0.15);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 .text {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--ink);
+  flex: 1;
 }
 .actions {
   display: flex;
@@ -19,8 +21,8 @@
   flex-shrink: 0;
 }
 .dismiss {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
