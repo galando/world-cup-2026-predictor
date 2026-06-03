@@ -27,6 +27,16 @@ describe('predictKnockout', () => {
     expect(result.qualify.home).toBeCloseTo(result.qualify.away, 6);
   });
 
+  it('larger Elo gap produces decisive penalty split', () => {
+    const raw = buildGrid(2.5, 0.5);
+    const grid = applyDixonColes(raw, 2.5, 0.5, -0.05);
+    const result = predictKnockout('r32-2', 2.5, 0.5, grid, 2200, 1800);
+    // Elo expected score: 1 / (1 + 10^((1800-2200)/400)) = 1 / (1 + 10^(-1)) = 1/1.1 ≈ 0.909
+    // NOT the old linear ratio 2200/4000 = 0.55
+    expect(result.qualify.home).toBeGreaterThan(0.85);
+    expect(result.qualify.away).toBeLessThan(0.15);
+  });
+
   it('probs90 includes draw probability', () => {
     const raw = buildGrid(1.8, 1.1);
     const grid = applyDixonColes(raw, 1.8, 1.1, -0.05);

@@ -1,0 +1,10 @@
+{
+  "stage": "plan_complete",
+  "spec": "fix-statistics-gaps",
+  "spec_path": ".temper/specs/fix-statistics-gaps",
+  "branch": "fix/statistics-gaps",
+  "original_args": "plan all the gaps above accordingly in a separate pr",
+  "next_stage": "build",
+  "artifacts": ["intent.md", "tasks.md", "plan.md"],
+  "updated": "2026-06-03T16:05:00.000Z"
+}

@@ -62,6 +62,13 @@ export function computeTeams(matches, eloMap, teamsMeta) {
 
 /**
  * Build form array (last 5 results: W/D/L).
+ *
+ * Design decision: Form is intentionally binary (W/D/L) rather than weighted
+ * by scoreline magnitude. This is capped at the last 5 matches, sorted by date
+ * descending, so recency is implicitly handled — only the most recent matches
+ * are considered. No explicit time-decay weights are needed because the window
+ * is already limited to recent results, and the binary W/D/L classification
+ * doesn't benefit from continuous weighting.
  */
 function buildForm(results) {
   // Sort by date descending, take last 5

@@ -26,8 +26,8 @@ import { aggregateOutcome } from './poisson-dc.js';
 export function predictKnockout(matchId, lambdaH, lambdaA, grid, eloHome, eloAway) {
   const probs90 = aggregateOutcome(grid);
 
-  // Penalty probability proportional to Elo ratio
-  const pHomePens = eloHome / (eloHome + eloAway);
+  // Penalty probability using standard Elo expected score formula
+  const pHomePens = 1 / (1 + Math.pow(10, (eloAway - eloHome) / 400));
 
   const qualify = {
     home: probs90.home + probs90.draw * pHomePens,
