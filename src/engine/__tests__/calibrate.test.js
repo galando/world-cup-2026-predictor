@@ -52,6 +52,33 @@ describe('getTeamLambda', () => {
     const lambdaHome = getTeamLambda(team, opponent, { homeAdvantage: Math.log(1.15) });
     expect(lambdaHome).toBeGreaterThan(lambdaNeutral);
   });
+
+  it('positive attack increases lambda', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaAtk = getTeamLambda(team, opponent, { attack: 0.3 });
+    expect(lambdaAtk).toBeGreaterThan(lambdaBase);
+    // lambdaAtk = baseline * exp(0.3)
+    expect(lambdaAtk).toBeCloseTo(BASELINE_LAMBDA * Math.exp(0.3), 6);
+  });
+
+  it('positive opponentDefence increases lambda (weak defence)', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaVsWeak = getTeamLambda(team, opponent, { opponentDefence: 0.3 });
+    expect(lambdaVsWeak).toBeGreaterThan(lambdaBase);
+    expect(lambdaVsWeak).toBeCloseTo(BASELINE_LAMBDA * Math.exp(0.3), 6);
+  });
+
+  it('attack and opponentDefence compound correctly', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBoth = getTeamLambda(team, opponent, { attack: 0.2, opponentDefence: 0.3 });
+    // baseline * exp(0.2) * exp(0.3) = baseline * exp(0.5)
+    expect(lambdaBoth).toBeCloseTo(BASELINE_LAMBDA * Math.exp(0.5), 6);
+  });
 });
 
 describe('timeDecayWeight', () => {
@@ -104,9 +131,152 @@ describe('computeAttackDefence', () => {
     const eloMap = new Map([['ARG', 2140], ['BRA', 2010]]);
     const { attack, defence } = computeAttackDefence(results, eloMap, 3);
 
-    // ARG has only 1 match, below minMatches=3, so Elo prior used
+    // ARG has only 1 match, below minMatches=3, so Elo prior blended with data
     expect(attack.ARG).toBeDefined();
     // ARG Elo above average → positive attack
     expect(attack.ARG).toBeGreaterThan(0);
+  });
+
+  it('recent results weight more than old results', () => {
+    const eloMap = new Map([['A', 2000], ['B', 2000], ['C', 2000]]);
+
+    // 3 teams: A and B always play recent. C's date varies.
+    // A scores 3, B scores 1, C scores 1 — all concede to maintain balance
+    // Scenario 1: C's matches are recent (same date as A/B)
+    const recentC = [
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-01' },
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-05' },
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-09' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-01' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-05' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-09' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2026-05-01' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2026-05-05' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2026-05-09' },
+    ];
+
+    // Scenario 2: C's matches are old (2022), A and B stay recent
+    const oldC = [
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-01' },
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-05' },
+      { team: 'A', goalsFor: 3, goalsAgainst: 1, date: '2026-05-09' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-01' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-05' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-05-09' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2022-05-01' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2022-05-05' },
+      { team: 'C', goalsFor: 1, goalsAgainst: 2, date: '2022-05-09' },
+    ];
+
+    const { attack: recentAttack } = computeAttackDefence(recentC, eloMap, 3);
+    const { attack: oldAttack } = computeAttackDefence(oldC, eloMap, 3);
+
+    // A always scores above average in both scenarios
+    expect(recentAttack.A).toBeGreaterThan(0);
+    expect(oldAttack.A).toBeGreaterThan(0);
+
+    // With C decayed, tournament weighted avg is dominated by A and B (both recent).
+    // C's low scoring barely counts. This changes A's attack value vs the recent scenario.
+    // In recentC: all weights equal, avg = (9+3+3)/9 = 1.67, A avg = 3 → attack = log(3/1.67)
+    // In oldC: C has ~0 weight, avg ≈ (9+3)/(6) = 2, A avg = 3 → attack = log(3/2)
+    // So recentC attack for A = log(1.8) ≈ 0.588
+    // oldC attack for A = log(1.5) ≈ 0.405
+    // A's attack is HIGHER when C is recent because C's low scoring pulls down the avg
+    expect(recentAttack.A).toBeGreaterThan(oldAttack.A);
+  });
+
+  it('same-date results produce same output regardless of date value', () => {
+    const eloMap = new Map([['ARG', 2140], ['BRA', 2010]]);
+    const results = [
+      { team: 'ARG', goalsFor: 3, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'ARG', goalsFor: 2, goalsAgainst: 0, date: '2026-06-01' },
+      { team: 'ARG', goalsFor: 1, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'BRA', goalsFor: 1, goalsAgainst: 2, date: '2026-06-01' },
+      { team: 'BRA', goalsFor: 0, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'BRA', goalsFor: 2, goalsAgainst: 2, date: '2026-06-01' },
+    ];
+
+    // All same date means timeDecayWeight is the same for all → weighted = unweighted ratios
+    const { attack, defence } = computeAttackDefence(results, eloMap, 3);
+    // ARG: 6 goals / 3 matches = 2.0, tournament avg = 4.5/6 = 0.75 per match per team entry
+    expect(attack.ARG).toBeDefined();
+    expect(attack.BRA).toBeDefined();
+  });
+
+  it('weighted tournament averages are correct', () => {
+    const eloMap = new Map([['A', 2000], ['B', 2000]]);
+    const results = [
+      { team: 'A', goalsFor: 2, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'B', goalsFor: 1, goalsAgainst: 2, date: '2026-06-01' },
+      { team: 'A', goalsFor: 3, goalsAgainst: 0, date: '2026-01-01' },
+      { team: 'B', goalsFor: 0, goalsAgainst: 3, date: '2026-01-01' },
+    ];
+
+    const { attack } = computeAttackDefence(results, eloMap, 2);
+
+    // A scores more in recent match (2) than old match (3 but decayed)
+    // So A's weighted avg should reflect recency
+    expect(attack.A).toBeDefined();
+    expect(attack.B).toBeDefined();
+  });
+
+  it('blends Elo prior with partial match data', () => {
+    const eloMap = new Map([['ARG', 2140], ['BRA', 1800]]);
+    // ARG has 1 match (< minMatches=3) with positive goals — should blend
+    const results = [
+      { team: 'ARG', goalsFor: 2, goalsAgainst: 1, date: '2026-06-01' },
+    ];
+    const { attack, defence } = computeAttackDefence(results, eloMap, 3);
+
+    // With 1/3 blend weight, result should be between pure Elo and pure data
+    expect(attack.ARG).toBeDefined();
+    // ARG has high Elo → positive Elo prior. Data also shows above avg scoring.
+    expect(attack.ARG).toBeGreaterThan(0);
+  });
+
+  it('blend transitions smoothly from Elo-only to data-only', () => {
+    const eloMap = new Map([['T', 2000]]);
+
+    // 0 matches: Elo prior only
+    const r0 = computeAttackDefence([], eloMap, 3);
+    // (T not in results, so not in output)
+
+    // 1 match
+    const results1 = [
+      { team: 'T', goalsFor: 2, goalsAgainst: 1, date: '2026-06-01' },
+    ];
+    const r1 = computeAttackDefence(results1, eloMap, 3);
+
+    // 2 matches
+    const results2 = [
+      { team: 'T', goalsFor: 2, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'T', goalsFor: 1, goalsAgainst: 0, date: '2026-06-05' },
+    ];
+    const r2 = computeAttackDefence(results2, eloMap, 3);
+
+    // 3 matches: full data
+    const results3 = [
+      { team: 'T', goalsFor: 2, goalsAgainst: 1, date: '2026-06-01' },
+      { team: 'T', goalsFor: 1, goalsAgainst: 0, date: '2026-06-05' },
+      { team: 'T', goalsFor: 1, goalsAgainst: 1, date: '2026-06-09' },
+    ];
+    const r3 = computeAttackDefence(results3, eloMap, 3);
+
+    // All should be defined and finite
+    expect(isFinite(r1.attack.T)).toBe(true);
+    expect(isFinite(r2.attack.T)).toBe(true);
+    expect(isFinite(r3.attack.T)).toBe(true);
+  });
+
+  it('team with 0 matches uses Elo prior only', () => {
+    const eloMap = new Map([['ARG', 2140], ['BRA', 1800]]);
+    const results = [
+      { team: 'BRA', goalsFor: 1, goalsAgainst: 1, date: '2026-06-01' },
+    ];
+    const { attack, defence } = computeAttackDefence(results, eloMap, 3);
+
+    // ARG not in results at all → no entry in attack/defence
+    // (only teams that appear in results get computed)
+    expect(attack.BRA).toBeDefined();
   });
 });

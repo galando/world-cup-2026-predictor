@@ -9,11 +9,33 @@ import { predictKnockout } from '../../src/engine/knockout.js';
 
 /** Home advantage for host nations (ln(1.15) ~ 0.14) */
 const HOME_ADVANTAGE_HOST = Math.log(1.15);
+
+/**
+ * Host nations for the 2026 World Cup: Mexico, USA, Canada.
+ * These are the only teams that receive a home advantage boost.
+ */
 const HOST_NATIONS = new Set(['MEX', 'USA', 'CAN']);
 
 /**
  * Compute home advantage for a match.
- * Returns ln multiplier if the match is at a host nation venue for the host team.
+ *
+ * Design decision: Home advantage applies ONLY to host nations (MEX, USA, CAN)
+ * when they are designated as the "home" team in the seeding table. The "home"
+ * designation is structurally arbitrary for non-host teams (it simply determines
+ * which side of the bracket they appear on), but for host nations it correlates
+ * with playing at a venue in their country.
+ *
+ * For non-host teams, no home advantage is applied, which is correct for
+ * neutral-site World Cup matches.
+ *
+ * Limitation: When venue-to-country mapping becomes available, this can be
+ * refined to check whether the host nation is actually playing at a venue
+ * in their own country, rather than relying on the arbitrary "home" designation.
+ *
+ * @param {string} teamCode - Team code (e.g., 'MEX')
+ * @param {boolean} isHome - Whether the team is the "home" team in the seeding table
+ * @param {string} matchVenue - Match venue (not currently used for location mapping)
+ * @returns {number} ln multiplier (0 = no advantage, ~0.14 for host home matches)
  */
 function getHomeAdvantage(teamCode, isHome, matchVenue) {
   if (isHome && HOST_NATIONS.has(teamCode)) {

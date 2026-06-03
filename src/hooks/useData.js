@@ -15,7 +15,7 @@ export function useData(key) {
     }
 
     let cancelled = false;
-    fetch(`/data/${key}.json`)
+    fetch(`${import.meta.env.BASE_URL}data/${key}.json`)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`);
         return r.json();

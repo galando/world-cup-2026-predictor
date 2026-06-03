@@ -337,3 +337,143 @@ describe('Defence sign (post-match model accuracy)', () => {
   });
 });
 
+describe('Full pipeline with time decay, fair play, H2H, host nations', () => {
+  const pipelineTeamsMeta = {
+    MEX: { group: 'A', flagIso: 'mx', nameEN: 'Mexico', nameHE: 'מקסיקו', fifaRank: 15 },
+    ARG: { group: 'A', flagIso: 'ar', nameEN: 'Argentina', nameHE: 'ארגנטינה', fifaRank: 1 },
+    BRA: { group: 'A', flagIso: 'br', nameEN: 'Brazil', nameHE: 'ברזיל', fifaRank: 5 },
+    FRA: { group: 'A', flagIso: 'fr', nameEN: 'France', nameHE: 'צרפת', fifaRank: 3 },
+  };
+
+  const pipelineEloMap = new Map([['MEX', 1950], ['ARG', 2140], ['BRA', 2080], ['FRA', 2100]]);
+
+  const pipelineMatches = [
+    // MEX 3-1 ARG (recent, MEX home = host advantage applies in predictions)
+    {
+      matchId: 'A-1', homeTeam: 'MEX', awayTeam: 'ARG', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 3, away: 1 }, date: '2026-06-01',
+      cards: [{ team: 'ARG', type: 'yellow' }],
+    },
+    // BRA 2-2 FRA (recent)
+    {
+      matchId: 'A-2', homeTeam: 'BRA', awayTeam: 'FRA', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 2, away: 2 }, date: '2026-06-01',
+      cards: [{ team: 'BRA', type: 'yellow' }, { team: 'FRA', type: 'yellow' }],
+    },
+    // MEX 0-2 BRA (recent)
+    {
+      matchId: 'A-3', homeTeam: 'MEX', awayTeam: 'BRA', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 0, away: 2 }, date: '2026-06-05',
+    },
+    // FRA 1-0 ARG (recent)
+    {
+      matchId: 'A-4', homeTeam: 'FRA', awayTeam: 'ARG', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 1, away: 0 }, date: '2026-06-05',
+      cards: [{ team: 'ARG', type: 'red' }],
+    },
+    // ARG 3-0 BRA (recent)
+    {
+      matchId: 'A-5', homeTeam: 'ARG', awayTeam: 'BRA', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 3, away: 0 }, date: '2026-06-09',
+    },
+    // FRA 2-1 MEX (recent)
+    {
+      matchId: 'A-6', homeTeam: 'FRA', awayTeam: 'MEX', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 2, away: 1 }, date: '2026-06-09',
+      cards: [{ team: 'MEX', type: 'second_yellow' }],
+    },
+  ];
+
+  it('standings: H2H breaks ties between tied teams', () => {
+    const standings = buildStandings(pipelineMatches, pipelineTeamsMeta);
+
+    // Points computation:
+    // MEX: beat ARG 3-1 (W), lost BRA 0-2 (L), lost FRA 1-2 (L) = 3 pts
+    // ARG: lost MEX 1-3 (L), lost FRA 0-1 (L), beat BRA 3-0 (W) = 3 pts
+    // BRA: drew FRA 2-2 (D), beat MEX 2-0 (W), lost ARG 0-3 (L) = 4 pts
+    // FRA: drew BRA 2-2 (D), beat ARG 1-0 (W), beat MEX 2-1 (W) = 7 pts
+    const teams = standings.groups.A;
+    const fra = teams.find(t => t.team === 'FRA');
+    const bra = teams.find(t => t.team === 'BRA');
+    const mex = teams.find(t => t.team === 'MEX');
+    const arg = teams.find(t => t.team === 'ARG');
+
+    expect(fra.pts).toBe(7);
+    expect(bra.pts).toBe(4);
+    // FRA is clear 1st with 7 pts
+    expect(teams[0].team).toBe('FRA');
+    // BRA is 2nd with 4 pts
+    expect(teams[1].team).toBe('BRA');
+
+    expect(mex.pts).toBe(3);
+    expect(arg.pts).toBe(3);
+    // MEX and ARG tied on 3 pts. MEX beat ARG in H2H → MEX ranks higher
+    expect(teams[2].team).toBe('MEX');
+    expect(teams[3].team).toBe('ARG');
+  });
+
+  it('standings: fair play populated from card data', () => {
+    const standings = buildStandings(pipelineMatches, pipelineTeamsMeta);
+
+    const arg = standings.groups.A.find(t => t.team === 'ARG');
+    const mex = standings.groups.A.find(t => t.team === 'MEX');
+    const bra = standings.groups.A.find(t => t.team === 'BRA');
+    const fra = standings.groups.A.find(t => t.team === 'FRA');
+
+    // ARG: 1 yellow + 1 red = -1 + -4 = -5
+    expect(arg.fairPlay).toBe(-5);
+    // MEX: 1 second_yellow = -3
+    expect(mex.fairPlay).toBe(-3);
+    // BRA: 1 yellow = -1
+    expect(bra.fairPlay).toBe(-1);
+    // FRA: 1 yellow = -1
+    expect(fra.fairPlay).toBe(-1);
+  });
+
+  it('predictions: time decay weighted attack/defence used in lambda', () => {
+    const { teams } = computeTeams(pipelineMatches, pipelineEloMap, pipelineTeamsMeta);
+
+    // All teams should have attack/defence computed
+    for (const code of ['MEX', 'ARG', 'BRA', 'FRA']) {
+      expect(teams[code].attack).toBeDefined();
+      expect(teams[code].defence).toBeDefined();
+      expect(isFinite(teams[code].attack)).toBe(true);
+      expect(isFinite(teams[code].defence)).toBe(true);
+    }
+
+    // ARG has mixed results but won big vs BRA recently
+    // Their attack should reflect time-weighted performance
+    expect(teams.ARG.attack).toBeDefined();
+
+    // Run predictions for a knockout match
+    const knockoutMatch = {
+      matchId: 'r32-test', homeTeam: 'ARG', awayTeam: 'BRA',
+      stage: 'r32', group: null, status: 'SCHEDULED', score: null,
+      date: '2026-06-25', venue: 'Estadio Azteca',
+    };
+
+    const predictions = runPredictions([knockoutMatch], teams);
+    expect(predictions).toHaveLength(1);
+    expect(predictions[0].probs.home + predictions[0].probs.draw + predictions[0].probs.away).toBeCloseTo(1, 3);
+    expect(predictions[0].qualify).toBeDefined();
+    expect(predictions[0].qualify.home + predictions[0].qualify.away).toBeCloseTo(1, 3);
+  });
+
+  it('full pipeline produces valid JSON-serializable output', () => {
+    const { teams } = computeTeams(pipelineMatches, pipelineEloMap, pipelineTeamsMeta);
+    const standings = buildStandings(pipelineMatches, pipelineTeamsMeta);
+
+    const validMatches = pipelineMatches.filter(m => teams[m.homeTeam] && teams[m.awayTeam]);
+    const predictions = runPredictions(validMatches, teams);
+
+    expect(() => JSON.stringify(teams)).not.toThrow();
+    expect(() => JSON.stringify(standings.groups)).not.toThrow();
+    expect(() => JSON.stringify(predictions)).not.toThrow();
+
+    // All predictions have valid probabilities
+    for (const p of predictions) {
+      expect(p.probs.home + p.probs.draw + p.probs.away).toBeCloseTo(1, 3);
+    }
+  });
+});
+

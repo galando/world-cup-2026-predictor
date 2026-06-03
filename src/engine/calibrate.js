@@ -25,17 +25,20 @@ export function eloToLambdaDiff(eloDiff) {
 
 /**
  * Compute expected goals (lambda) for a team given their Elo vs opponent's Elo.
- * Formula: baseline * exp(eloToLambdaDiff)
+ * Formula: baseline * exp(eloToLambdaDiff) * exp(attack) * exp(opponentDefence) * exp(homeAdvantage)
  * @param {{ elo: number }} team - Team object with Elo rating
  * @param {{ elo: number }} opponent - Opponent object with Elo rating
- * @param {{ homeAdvantage?: number }} [options] - Optional home advantage (ln(1.15) for hosts)
+ * @param {{ homeAdvantage?: number, attack?: number, opponentDefence?: number }} [options] - Optional factors
  * @returns {number} Expected goals (lambda) for the team
  */
 export function getTeamLambda(team, opponent, options = {}) {
   const eloDiff = team.elo - opponent.elo;
   const lambdaDiff = eloToLambdaDiff(eloDiff);
-  const lambda = BASELINE_LAMBDA * Math.exp(lambdaDiff);
-  return options.homeAdvantage ? lambda * Math.exp(options.homeAdvantage) : lambda;
+  let lambda = BASELINE_LAMBDA * Math.exp(lambdaDiff);
+  if (options.attack) lambda *= Math.exp(options.attack);
+  if (options.opponentDefence) lambda *= Math.exp(options.opponentDefence);
+  if (options.homeAdvantage) lambda *= Math.exp(options.homeAdvantage);
+  return lambda;
 }
 
 /**
@@ -55,12 +58,14 @@ export function timeDecayWeight(matchDate, referenceDate = new Date()) {
 
 /**
  * Compute attack and defence parameters from match results.
- * Uses log-ratio method relative to tournament average.
+ * Uses time-weighted log-ratio method relative to tournament average.
+ * Recent matches receive higher weight via exponential time decay.
  *
- * attack[team]  = log(avgGoalsScored[team] / avgGoalsScored[all])
- * defence[team] = log(avgGoalsConceded[team] / avgGoalsConceded[all])
+ * attack[team]  = log(weightedAvgGoalsScored[team] / weightedAvgGoalsScored[all])
+ * defence[team] = log(weightedAvgGoalsConceded[team] / weightedAvgGoalsConceded[all])
  *
  * Starts from Elo-derived prior when insufficient data.
+ * Blends data with Elo prior for partial data (0 < matches < minMatches).
  *
  * @param {Array<{team: string, goalsFor: number, goalsAgainst: number, date: string}>} results
  * @param {Map<string, number>} eloMap - teamCode -> Elo rating
@@ -68,42 +73,57 @@ export function timeDecayWeight(matchDate, referenceDate = new Date()) {
  * @returns {{ attack: Object<string, number>, defence: Object<string, number> }}
  */
 export function computeAttackDefence(results, eloMap, minMatches = 3) {
-  // Aggregate per-team stats
+  // Aggregate per-team stats with time-weighted goals
   const teamStats = {};
-  let totalGoalsFor = 0;
-  let totalGoalsAgainst = 0;
-  let totalMatches = 0;
+  let totalWeightedGoalsFor = 0;
+  let totalWeightedGoalsAgainst = 0;
+  let totalWeightedMatches = 0;
 
   for (const r of results) {
+    const w = timeDecayWeight(r.date);
+
     if (!teamStats[r.team]) {
-      teamStats[r.team] = { goalsFor: 0, goalsAgainst: 0, matches: 0 };
+      teamStats[r.team] = { weightedGoalsFor: 0, weightedGoalsAgainst: 0, weightedMatches: 0, matches: 0, goalsFor: 0, goalsAgainst: 0 };
     }
+    teamStats[r.team].weightedGoalsFor += r.goalsFor * w;
+    teamStats[r.team].weightedGoalsAgainst += r.goalsAgainst * w;
+    teamStats[r.team].weightedMatches += w;
+    teamStats[r.team].matches += 1;
     teamStats[r.team].goalsFor += r.goalsFor;
     teamStats[r.team].goalsAgainst += r.goalsAgainst;
-    teamStats[r.team].matches += 1;
-    totalGoalsFor += r.goalsFor;
-    totalGoalsAgainst += r.goalsAgainst;
-    totalMatches += 1;
+    totalWeightedGoalsFor += r.goalsFor * w;
+    totalWeightedGoalsAgainst += r.goalsAgainst * w;
+    totalWeightedMatches += w;
   }
 
-  const avgGoalsFor = totalMatches > 0 ? totalGoalsFor / totalMatches : BASELINE_LAMBDA;
-  const avgGoalsAgainst = totalMatches > 0 ? totalGoalsAgainst / totalMatches : BASELINE_LAMBDA;
+  const avgGoalsFor = totalWeightedMatches > 0 ? totalWeightedGoalsFor / totalWeightedMatches : BASELINE_LAMBDA;
+  const avgGoalsAgainst = totalWeightedMatches > 0 ? totalWeightedGoalsAgainst / totalWeightedMatches : BASELINE_LAMBDA;
 
   const attack = {};
   const defence = {};
 
   for (const [team, stats] of Object.entries(teamStats)) {
-    if (stats.matches >= minMatches && stats.goalsFor > 0 && stats.goalsAgainst > 0) {
-      const teamAvgFor = stats.goalsFor / stats.matches;
-      const teamAvgAgainst = stats.goalsAgainst / stats.matches;
+    const eloPrior = eloMap.has(team) ? computeEloPrior(eloMap, team) : { attack: 0, defence: 0 };
+
+    if (stats.matches >= minMatches && stats.goalsFor > 0) {
+      // Full data: use weighted averages
+      const teamAvgFor = stats.weightedGoalsFor / stats.weightedMatches;
+      const teamAvgAgainst = stats.weightedGoalsAgainst / stats.weightedMatches;
       attack[team] = Math.log(teamAvgFor / avgGoalsFor);
-      defence[team] = Math.log(teamAvgAgainst / avgGoalsAgainst);
+      // Floor teamAvgAgainst to avoid log(0) for teams with all clean sheets
+      defence[team] = Math.log(Math.max(teamAvgAgainst, 0.01) / avgGoalsAgainst);
+    } else if (stats.matches > 0 && stats.goalsFor > 0) {
+      // Partial data: blend data-based with Elo prior
+      const teamAvgFor = stats.weightedGoalsFor / stats.weightedMatches;
+      const teamAvgAgainst = stats.weightedGoalsAgainst / stats.weightedMatches;
+      const dataAttack = Math.log(teamAvgFor / avgGoalsFor);
+      const dataDefence = Math.log(Math.max(teamAvgAgainst, 0.01) / avgGoalsAgainst);
+      const blendWeight = stats.matches / minMatches;
+      attack[team] = blendWeight * dataAttack + (1 - blendWeight) * eloPrior.attack;
+      defence[team] = blendWeight * dataDefence + (1 - blendWeight) * eloPrior.defence;
     } else if (eloMap.has(team)) {
-      // Fallback: derive from Elo relative to average
-      const avgElo = [...eloMap.values()].reduce((a, b) => a + b, 0) / eloMap.size;
-      const eloDiff = eloMap.get(team) - avgElo;
-      attack[team] = eloToLambdaDiff(eloDiff) * 0.5;
-      defence[team] = -eloToLambdaDiff(eloDiff) * 0.3;
+      attack[team] = eloPrior.attack;
+      defence[team] = eloPrior.defence;
     } else {
       attack[team] = 0;
       defence[team] = 0;
@@ -111,4 +131,19 @@ export function computeAttackDefence(results, eloMap, minMatches = 3) {
   }
 
   return { attack, defence };
+}
+
+/**
+ * Compute Elo-based prior for attack/defence parameters.
+ * @param {Map<string, number>} eloMap
+ * @param {string} team
+ * @returns {{ attack: number, defence: number }}
+ */
+function computeEloPrior(eloMap, team) {
+  const avgElo = [...eloMap.values()].reduce((a, b) => a + b, 0) / eloMap.size;
+  const eloDiff = eloMap.get(team) - avgElo;
+  return {
+    attack: eloToLambdaDiff(eloDiff) * 0.5,
+    defence: -eloToLambdaDiff(eloDiff) * 0.3,
+  };
 }
