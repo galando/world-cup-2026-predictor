@@ -1,7 +1,10 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import styles from './styles.module.css';
 
 export default function ScorelineGrid({ matrix, maxGoals = 6, onSelect }) {
+  const { t } = useTranslation();
+
   const grid = useMemo(() => {
     const rows = [];
     for (let h = 0; h <= maxGoals; h++) {
@@ -16,15 +19,16 @@ export default function ScorelineGrid({ matrix, maxGoals = 6, onSelect }) {
 
   return (
     <div className={styles.wrap}>
+      <div className={styles.legend}>{t('prediction.scoreMatrixLegend')}</div>
       <div className={styles.header}>
-        <span />
+        <span className={styles.cornerLabel}>{t('prediction.homeAxis')}</span>
         {Array.from({ length: maxGoals + 1 }, (_, a) => (
           <span key={a} className={styles.headerCell}>{a}</span>
         ))}
       </div>
       {Array.from({ length: maxGoals + 1 }, (_, h) => (
         <div key={h} className={styles.row}>
-          <span className={styles.headerCell}>{h}</span>
+          <span className={styles.rowLabel}>{h}</span>
           {Array.from({ length: maxGoals + 1 }, (_, a) => {
             const cell = grid.rows.find(r => r.h === h && r.a === a);
             const pct = cell ? Math.round(cell.p * 1000) / 10 : 0;
@@ -35,14 +39,15 @@ export default function ScorelineGrid({ matrix, maxGoals = 6, onSelect }) {
                 className={styles.cell}
                 style={{ opacity: 0.3 + intensity * 0.7 }}
                 onClick={() => onSelect?.(h, a)}
-                title={`${h}-${a}: ${pct}%`}
+                title={`${h}–${a}: ${pct}%`}
               >
-                {pct > 0 ? `${pct}` : ''}
+                {pct > 0 ? `${pct}%` : ''}
               </button>
             );
           })}
         </div>
       ))}
+      <div className={styles.awayLabel}>{t('prediction.awayAxis')}</div>
     </div>
   );
 }

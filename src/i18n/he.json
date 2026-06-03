@@ -50,6 +50,9 @@
     "whyPanel": "איך הגענו לאחוזים האלה?",
     "topScores": "תוצאות סבירות",
     "scoreMatrix": "טבלת תוצאות",
+    "scoreMatrixLegend": "הסתברות % לכל תוצאה",
+    "homeAxis": "בית ↓",
+    "awayAxis": "חוץ →",
     "includingPenalties": "כולל הארכה ופנדלים",
     "qualifyTitle": "מי עולה לשלב הבא?"
   },
@@ -77,7 +80,7 @@
   },
   "team": {
     "fifaRank": "דירוג פיפ\"א",
-    "elo": "מד כושר",
+    "elo": "דירוג חוזק (Elo)",
     "form": "כושר",
     "avgGoals": "ממוצע שערים",
     "avgConceded": "ממוצע ספיגות",

@@ -50,6 +50,9 @@
     "whyPanel": "How did we get these percentages?",
     "topScores": "Likely Scores",
     "scoreMatrix": "Score Matrix",
+    "scoreMatrixLegend": "Probability % for each scoreline",
+    "homeAxis": "Home ↓",
+    "awayAxis": "Away →",
     "includingPenalties": "Including extra time and penalties",
     "qualifyTitle": "Who advances?"
   },
@@ -77,7 +80,7 @@
   },
   "team": {
     "fifaRank": "FIFA Ranking",
-    "elo": "Elo Rating",
+    "elo": "Strength (Elo)",
     "form": "Form",
     "avgGoals": "Avg Goals",
     "avgConceded": "Avg Conceded",

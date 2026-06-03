@@ -36,7 +36,7 @@ export default function TeamCompare({
           </div>
         )}
         <FormRow form={homeForm} />
-        {homeTeam && (
+        {homeTeam && homeTeam.matchesPlayed > 0 && (
           <div className={styles.avg}>
             {homeTeam.avgGoals?.toFixed(1)} {'⚽'} / {homeTeam.avgConceded?.toFixed(1)} {'☁'}
           </div>
@@ -54,7 +54,7 @@ export default function TeamCompare({
           </div>
         )}
         <FormRow form={awayForm} />
-        {awayTeam && (
+        {awayTeam && awayTeam.matchesPlayed > 0 && (
           <div className={styles.avg}>
             {awayTeam.avgGoals?.toFixed(1)} {'⚽'} / {awayTeam.avgConceded?.toFixed(1)} {'☁'}
           </div>
