@@ -22,6 +22,7 @@ import { runPredictions } from './lib/run-predictions.js';
 import { buildStandings } from './lib/build-standings.js';
 import { buildBracket } from './lib/build-bracket.js';
 import { writeArtifacts } from './lib/write-artifacts.js';
+import { fetchAndUpdateElo } from './lib/fetch-elo.js';
 
 const startTime = Date.now();
 
@@ -30,8 +31,9 @@ async function main() {
   console.log(`Started: ${new Date().toISOString()}\n`);
 
   try {
-    // Step 1: Load Elo ratings
-    console.log('[1/9] Loading Elo ratings...');
+    // Step 1: Refresh Elo from eloratings.net if >23h stale
+    console.log('[1/9] Refreshing Elo ratings...');
+    await fetchAndUpdateElo();
     const eloMap = loadElo();
     console.log(`  Loaded ${eloMap.size} team Elo ratings`);
 

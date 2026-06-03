@@ -32,7 +32,7 @@ function buildFactorChain(teamData, opponentData, isHome, match) {
   const eloMult = Math.exp(lambdaDiff);
 
   const atkMult = teamData.attack ? Math.exp(teamData.attack) : 1;
-  const defMult = opponentData.defence ? Math.exp(-opponentData.defence) : 1;
+  const defMult = opponentData.defence ? Math.exp(opponentData.defence) : 1;
   const homeAdv = getHomeAdvantage(teamData.code, isHome, match.venue);
   const venueMult = Math.exp(homeAdv);
 
@@ -64,7 +64,7 @@ function computeLambda(teamData, opponentData, isHome, match) {
     lambda *= Math.exp(teamData.attack);
   }
   if (opponentData.defence) {
-    lambda *= Math.exp(-opponentData.defence);
+    lambda *= Math.exp(opponentData.defence);
   }
 
   // Home advantage for host nations

@@ -56,7 +56,7 @@ export default function MatchCard({ match, teamsMeta, prediction, isPreferred })
         <div className={styles.center}>
           {isFinished && match.score ? (
             <span className={styles.score}>
-              {match.score.home} - {match.score.away}
+              {match.score.home} – {match.score.away}
             </span>
           ) : (
             <span className={styles.vs}>{t('match.vs')}</span>

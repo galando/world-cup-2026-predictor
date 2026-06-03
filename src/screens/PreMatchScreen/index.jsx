@@ -124,7 +124,7 @@ export default function PreMatchScreen() {
         <button className={styles.backBtn} onClick={() => navigate(-1)}>
           <Ico name="back" size={22} />
         </button>
-        <span className={styles.topTitle}>{homeName} - {awayName}</span>
+        <span className={styles.topTitle}>{homeName} – {awayName}</span>
         <button className={styles.shareBtn} onClick={handleShare} disabled={!guess}>
           <Ico name="share" size={20} />
         </button>

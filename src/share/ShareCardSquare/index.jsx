@@ -55,7 +55,7 @@ export default function ShareCardSquare({
           </div>
           <div className={styles.scoreCenter}>
             <span className={styles.scoreNum} data-share-text>{homeScore}</span>
-            <span className={styles.scoreDash}>-</span>
+            <span className={styles.scoreDash}>–</span>
             <span className={styles.scoreNum} data-share-text>{awayScore}</span>
           </div>
           <div className={styles.teamCol}>

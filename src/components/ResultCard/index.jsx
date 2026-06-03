@@ -22,7 +22,7 @@ export default function ResultCard({ score, guess }) {
     <Card className={styles.card}>
       <div className={styles.title}>{t('result.title')}</div>
       <div className={styles.score}>
-        {score.home} - {score.away}
+        {score.home} – {score.away}
       </div>
       {guess && <div className={styles.msg}>{msg}</div>}
     </Card>

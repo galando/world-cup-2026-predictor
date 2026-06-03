@@ -3,7 +3,7 @@
     "flagIso": "mx",
     "nameHE": "מקסיקו",
     "nameEN": "Mexico",
-    "fifaRank": 15,
+    "fifaRank": 14,
     "group": "A",
     "theme": {
       "field": "#0d2747",
@@ -19,21 +19,21 @@
     "flagIso": "za",
     "nameHE": "דרום אפריקה",
     "nameEN": "South Africa",
-    "fifaRank": 61,
+    "fifaRank": 37,
     "group": "A"
   },
   "KOR": {
     "flagIso": "kr",
     "nameHE": "דרום קוריאה",
     "nameEN": "South Korea",
-    "fifaRank": 22,
+    "fifaRank": 20,
     "group": "A"
   },
   "CZE": {
     "flagIso": "cz",
     "nameHE": "צ'כיה",
     "nameEN": "Czech Republic",
-    "fifaRank": 43,
+    "fifaRank": 25,
     "group": "A"
   },
   "CAN": {
@@ -56,21 +56,21 @@
     "flagIso": "ba",
     "nameHE": "בוסניה והרצגובינה",
     "nameEN": "Bosnia and Herzegovina",
-    "fifaRank": 57,
+    "fifaRank": 36,
     "group": "B"
   },
   "QAT": {
     "flagIso": "qa",
     "nameHE": "קטאר",
     "nameEN": "Qatar",
-    "fifaRank": 51,
+    "fifaRank": 40,
     "group": "B"
   },
   "SUI": {
     "flagIso": "ch",
     "nameHE": "שווייץ",
     "nameEN": "Switzerland",
-    "fifaRank": 17,
+    "fifaRank": 16,
     "group": "B"
   },
   "BRA": {
@@ -100,21 +100,21 @@
     "flagIso": "ht",
     "nameHE": "האיטי",
     "nameEN": "Haiti",
-    "fifaRank": 84,
+    "fifaRank": 48,
     "group": "C"
   },
   "SCO": {
     "flagIso": "gb-sct",
     "nameHE": "סקוטלנד",
     "nameEN": "Scotland",
-    "fifaRank": 36,
+    "fifaRank": 29,
     "group": "C"
   },
   "USA": {
     "flagIso": "us",
     "nameHE": "ארצות הברית",
     "nameEN": "United States",
-    "fifaRank": 14,
+    "fifaRank": 13,
     "group": "D",
     "theme": {
       "field": "#0a1628",
@@ -130,21 +130,21 @@
     "flagIso": "py",
     "nameHE": "פרגוואי",
     "nameEN": "Paraguay",
-    "fifaRank": 39,
+    "fifaRank": 32,
     "group": "D"
   },
   "AUS": {
     "flagIso": "au",
     "nameHE": "אוסטרליה",
     "nameEN": "Australia",
-    "fifaRank": 26,
+    "fifaRank": 24,
     "group": "D"
   },
   "TUR": {
     "flagIso": "tr",
     "nameHE": "טורקיה",
     "nameEN": "Turkey",
-    "fifaRank": 28,
+    "fifaRank": 23,
     "group": "D"
   },
   "GER": {
@@ -167,21 +167,21 @@
     "flagIso": "cw",
     "nameHE": "קוראסאו",
     "nameEN": "Curacao",
-    "fifaRank": 82,
+    "fifaRank": 47,
     "group": "E"
   },
   "CIV": {
     "flagIso": "ci",
     "nameHE": "חוף השנהב",
     "nameEN": "Ivory Coast",
-    "fifaRank": 42,
+    "fifaRank": 35,
     "group": "E"
   },
   "ECU": {
     "flagIso": "ec",
     "nameHE": "אקוודור",
     "nameEN": "Ecuador",
-    "fifaRank": 23,
+    "fifaRank": 21,
     "group": "E"
   },
   "NED": {
@@ -204,7 +204,7 @@
     "flagIso": "jp",
     "nameHE": "יפן",
     "nameEN": "Japan",
-    "fifaRank": 18,
+    "fifaRank": 17,
     "group": "F"
   },
   "SWE": {
@@ -218,7 +218,7 @@
     "flagIso": "tn",
     "nameHE": "תוניסיה",
     "nameEN": "Tunisia",
-    "fifaRank": 40,
+    "fifaRank": 33,
     "group": "F"
   },
   "BEL": {
@@ -248,21 +248,21 @@
     "flagIso": "ir",
     "nameHE": "איראן",
     "nameEN": "Iran",
-    "fifaRank": 20,
+    "fifaRank": 19,
     "group": "G"
   },
   "NZL": {
     "flagIso": "nz",
     "nameHE": "ניו זילנד",
     "nameEN": "New Zealand",
-    "fifaRank": 86,
+    "fifaRank": 39,
     "group": "G"
   },
   "ESP": {
     "flagIso": "es",
     "nameHE": "ספרד",
     "nameEN": "Spain",
-    "fifaRank": 1,
+    "fifaRank": 3,
     "group": "H",
     "theme": {
       "field": "#0d1b2a",
@@ -278,28 +278,28 @@
     "flagIso": "cv",
     "nameHE": "כף ורדה",
     "nameEN": "Cape Verde",
-    "fifaRank": 68,
+    "fifaRank": 44,
     "group": "H"
   },
   "KSA": {
     "flagIso": "sa",
     "nameHE": "ערב הסעודית",
     "nameEN": "Saudi Arabia",
-    "fifaRank": 60,
+    "fifaRank": 42,
     "group": "H"
   },
   "URU": {
     "flagIso": "uy",
     "nameHE": "אורוגוואי",
     "nameEN": "Uruguay",
-    "fifaRank": 16,
+    "fifaRank": 15,
     "group": "H"
   },
   "FRA": {
     "flagIso": "fr",
     "nameHE": "צרפת",
     "nameEN": "France",
-    "fifaRank": 3,
+    "fifaRank": 2,
     "group": "I",
     "theme": {
       "field": "#0a0a2e",
@@ -315,28 +315,28 @@
     "flagIso": "sn",
     "nameHE": "סנגל",
     "nameEN": "Senegal",
-    "fifaRank": 19,
+    "fifaRank": 18,
     "group": "I"
   },
   "IRQ": {
     "flagIso": "iq",
     "nameHE": "עיראק",
     "nameEN": "Iraq",
-    "fifaRank": 55,
+    "fifaRank": 38,
     "group": "I"
   },
   "NOR": {
     "flagIso": "no",
     "nameHE": "נורווגיה",
     "nameEN": "Norway",
-    "fifaRank": 29,
+    "fifaRank": 28,
     "group": "I"
   },
   "ARG": {
     "flagIso": "ar",
     "nameHE": "ארגנטינה",
     "nameEN": "Argentina",
-    "fifaRank": 2,
+    "fifaRank": 1,
     "group": "J",
     "theme": {
       "field": "#0d2747",
@@ -352,21 +352,21 @@
     "flagIso": "dz",
     "nameHE": "אלג'יריה",
     "nameEN": "Algeria",
-    "fifaRank": 35,
+    "fifaRank": 31,
     "group": "J"
   },
   "AUT": {
     "flagIso": "at",
     "nameHE": "אוסטריה",
     "nameEN": "Austria",
-    "fifaRank": 24,
+    "fifaRank": 22,
     "group": "J"
   },
   "JOR": {
     "flagIso": "jo",
     "nameHE": "ירדן",
     "nameEN": "Jordan",
-    "fifaRank": 66,
+    "fifaRank": 43,
     "group": "J"
   },
   "POR": {
@@ -389,21 +389,21 @@
     "flagIso": "cd",
     "nameHE": "קונגו דמוקרטית",
     "nameEN": "DR Congo",
-    "fifaRank": 62,
+    "fifaRank": 46,
     "group": "K"
   },
   "UZB": {
     "flagIso": "uz",
     "nameHE": "אוזבקיסטן",
     "nameEN": "Uzbekistan",
-    "fifaRank": 50,
+    "fifaRank": 41,
     "group": "K"
   },
   "COL": {
     "flagIso": "co",
     "nameHE": "קולומביה",
     "nameEN": "Colombia",
-    "fifaRank": 13,
+    "fifaRank": 12,
     "group": "K"
   },
   "ENG": {
@@ -433,7 +433,7 @@
     "flagIso": "gh",
     "nameHE": "גאנה",
     "nameEN": "Ghana",
-    "fifaRank": 72,
+    "fifaRank": 45,
     "group": "L"
   },
   "PAN": {

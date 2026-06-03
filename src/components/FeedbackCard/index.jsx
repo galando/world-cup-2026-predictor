@@ -27,7 +27,7 @@ export default function FeedbackCard({ homeGuess, awayGuess, probs, topScores, s
         {t('guess.feedback', { pct })}
       </div>
       <div className={styles.subtitle}>
-        {homeGuess} - {awayGuess}: {t('guess.myGuess')}
+        {homeGuess} – {awayGuess}: {t('guess.myGuess')}
       </div>
       <div className={styles.bars}>
         <MiniLean home={probs.home} draw={probs.draw} away={probs.away} size="md" />
