@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/world-cup-2026-predictor/',
   plugins: [
     react(),
     VitePWA({
@@ -15,7 +16,7 @@ export default defineConfig({
         background_color: '#0d1f14',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
+        start_url: '/world-cup-2026-predictor/',
         icons: [
           {
             src: '/icon-192.png',
@@ -34,7 +35,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
         runtimeCaching: [
           {
-            urlPattern: /^\/data\/.+\.json$/,
+            urlPattern: /\/data\/.+\.json$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'data-cache',
