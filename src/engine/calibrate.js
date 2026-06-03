@@ -99,11 +99,14 @@ export function computeAttackDefence(results, eloMap, minMatches = 3) {
   const avgGoalsFor = totalWeightedMatches > 0 ? totalWeightedGoalsFor / totalWeightedMatches : BASELINE_LAMBDA;
   const avgGoalsAgainst = totalWeightedMatches > 0 ? totalWeightedGoalsAgainst / totalWeightedMatches : BASELINE_LAMBDA;
 
+  // Pre-compute average Elo once for all Elo-prior derivations
+  const avgElo = eloMap.size > 0 ? [...eloMap.values()].reduce((a, b) => a + b, 0) / eloMap.size : 0;
+
   const attack = {};
   const defence = {};
 
   for (const [team, stats] of Object.entries(teamStats)) {
-    const eloPrior = eloMap.has(team) ? computeEloPrior(eloMap, team) : { attack: 0, defence: 0 };
+    const eloPrior = eloMap.has(team) ? computeEloPrior(eloMap, team, avgElo) : { attack: 0, defence: 0 };
 
     if (stats.matches >= minMatches && stats.goalsFor > 0) {
       // Full data: use weighted averages
@@ -139,8 +142,7 @@ export function computeAttackDefence(results, eloMap, minMatches = 3) {
  * @param {string} team
  * @returns {{ attack: number, defence: number }}
  */
-function computeEloPrior(eloMap, team) {
-  const avgElo = [...eloMap.values()].reduce((a, b) => a + b, 0) / eloMap.size;
+function computeEloPrior(eloMap, team, avgElo) {
   const eloDiff = eloMap.get(team) - avgElo;
   return {
     attack: eloToLambdaDiff(eloDiff) * 0.5,

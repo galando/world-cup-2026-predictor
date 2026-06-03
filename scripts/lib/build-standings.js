@@ -27,6 +27,7 @@ function sumFairPlay(cards) {
     if (card.type === 'yellow') return sum + FP_YELLOW;
     if (card.type === 'second_yellow') return sum + FP_SECOND_YELLOW;
     if (card.type === 'red') return sum + FP_STRAIGHT_RED;
+    // Unknown card types (e.g. 'var_review') intentionally ignored — forward-compatible
     return sum;
   }, 0);
 }
@@ -34,6 +35,12 @@ function sumFairPlay(cards) {
 /**
  * Build a head-to-head result map from group matches.
  * Returns { [teamA_teamB]: comparisonValue } where positive = A beat B, negative = B beat A.
+ *
+ * LIMITATION: Handles pairwise (2-way) ties correctly. For 3+ way ties on points,
+ * FIFA mandates comparing points/GD/GF in a "mini-group" of only the tied teams.
+ * The current pairwise approach may produce intransitive orderings in that edge case.
+ * The alphabetical final tiebreaker ensures deterministic output regardless.
+ *
  * @param {Array} matches - All matches
  * @param {string[]} groupTeams - Team codes in the group
  * @returns {Object}
