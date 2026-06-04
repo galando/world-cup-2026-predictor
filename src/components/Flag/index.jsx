@@ -5,7 +5,6 @@ export default function Flag({ code, size = 40, alt = '', className = '' }) {
     <img
       src={`https://flagcdn.com/w${size}/${code}.png`}
       alt={alt}
-      crossOrigin="anonymous"
       className={className}
       loading="lazy"
       style={{
