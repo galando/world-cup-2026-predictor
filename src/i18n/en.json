@@ -61,7 +61,16 @@
     "attack": "Attack Strength",
     "defence": "Opponent Defence",
     "form": "Recent Form",
-    "venue": "Home Advantage"
+    "venue": "Home Advantage",
+    "suspension": "Suspension",
+    "market": "Market Signal"
+  },
+  "market": {
+    "title": "Market Signal",
+    "blendWeight": "Market weight",
+    "impliedProbs": "Implied probabilities",
+    "bookmakers": "Bookmakers",
+    "modelOnly": "Model only"
   },
   "guess": {
     "title": "Guess the Score",

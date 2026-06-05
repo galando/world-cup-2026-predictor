@@ -8,7 +8,7 @@ import { computeTeams } from '../lib/compute-teams.js';
 import { runPredictions } from '../lib/run-predictions.js';
 import { buildStandings } from '../lib/build-standings.js';
 import { buildBracket } from '../lib/build-bracket.js';
-import { validatePredictions } from '../lib/write-artifacts.js';
+import { validatePredictions, computeCalibration as writeArtifactsComputeCalibration } from '../lib/write-artifacts.js';
 import { loadElo } from '../lib/load-elo.js';
 import { readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
@@ -477,3 +477,109 @@ describe('Full pipeline with time decay, fair play, H2H, host nations', () => {
   });
 });
 
+describe('Market blend integration (Scenarios 1+2)', () => {
+  const blendTeamsMeta = {
+    ARG: { group: 'A', flagIso: 'ar', nameEN: 'Argentina', nameHE: 'ארגנטינה', fifaRank: 1 },
+    BRA: { group: 'A', flagIso: 'br', nameEN: 'Brazil', nameHE: 'ברזיל', fifaRank: 5 },
+  };
+  const blendEloMap = new Map([['ARG', 2140], ['BRA', 2080]]);
+  const blendMatches = [
+    { matchId: 'A-1', homeTeam: 'ARG', awayTeam: 'BRA', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 2, away: 1 }, date: '2026-06-01' },
+    { matchId: 'A-2', homeTeam: 'BRA', awayTeam: 'ARG', stage: 'group', group: 'A',
+      status: 'FINISHED', score: { home: 0, away: 1 }, date: '2026-06-05' },
+  ];
+  const { teams } = computeTeams(blendMatches, blendEloMap, blendTeamsMeta);
+
+  it('blends model probs with market implied probs at w_market=0.25', () => {
+    const match = { matchId: 'r32-mkt', homeTeam: 'ARG', awayTeam: 'BRA', stage: 'r32', group: null, status: 'SCHEDULED', score: null, venue: 'Test' };
+
+    // First get model-only probs
+    const modelOnly = runPredictions([match], teams);
+    const pModel = modelOnly[0].probs;
+
+    // Now with market data
+    const marketMap = new Map([['ARG-BRA', { pHome: 0.60, pDraw: 0.25, pAway: 0.15, bookmakers: 3 }]]);
+    const blended = runPredictions([match], teams, null, marketMap);
+    const pBlended = blended[0].probs;
+
+    // Verify blend formula: pFinal = 0.75*pModel + 0.25*pImplied
+    // Note: run-predictions.js rounds to 4 decimal places via toFixed(4)
+    const expectedHome = parseFloat((0.75 * pModel.home + 0.25 * 0.60).toFixed(4));
+    const expectedDraw = parseFloat((0.75 * pModel.draw + 0.25 * 0.25).toFixed(4));
+    const expectedAway = parseFloat((0.75 * pModel.away + 0.25 * 0.15).toFixed(4));
+    expect(pBlended.home).toBeCloseTo(expectedHome, 3);
+    expect(pBlended.draw).toBeCloseTo(expectedDraw, 3);
+    expect(pBlended.away).toBeCloseTo(expectedAway, 3);
+
+    // Blended probs still sum to ~1 (toFixed(4) rounding means sum may be 0.9999)
+    expect(pBlended.home + pBlended.draw + pBlended.away).toBeCloseTo(1, 3);
+
+    // Market field present with correct structure
+    expect(blended[0].market).toBeDefined();
+    expect(blended[0].market.wMarket).toBe(0.25);
+    expect(blended[0].market.impliedHome).toBe(0.60);
+    expect(blended[0].market.modelHome).toBeCloseTo(pModel.home, 4);
+  });
+
+  it('falls back to model-only when no market data available', () => {
+    const match = { matchId: 'r32-nomkt', homeTeam: 'ARG', awayTeam: 'BRA', stage: 'r32', group: null, status: 'SCHEDULED', score: null, venue: 'Test' };
+
+    const noMarket = runPredictions([match], teams, null, null);
+    const emptyMarket = runPredictions([match], teams, null, new Map());
+
+    // Both should produce identical probs
+    expect(noMarket[0].probs.home).toBe(emptyMarket[0].probs.home);
+    expect(noMarket[0].probs.draw).toBe(emptyMarket[0].probs.draw);
+    expect(noMarket[0].probs.away).toBe(emptyMarket[0].probs.away);
+
+    // No market field when no market data
+    expect(noMarket[0].market).toBeUndefined();
+    expect(emptyMarket[0].market).toBeUndefined();
+  });
+});
+
+describe('Blended Brier score (Scenario 9)', () => {
+  it('computes both blended and model-only Brier when market blend is active', () => {
+    // Create a finished match with a prediction that has market blend
+    const matches = [
+      { matchId: 'test-1', homeTeam: 'ARG', awayTeam: 'BRA', status: 'FINISHED', score: { home: 2, away: 1 }, date: '2026-06-15' },
+    ];
+
+    const predictions = [
+      {
+        matchId: 'test-1',
+        stage: 'group',
+        lambdaHome: 1.5,
+        lambdaAway: 1.2,
+        probs: { home: 0.55, draw: 0.25, away: 0.20 }, // blended probs (home won)
+        market: {
+          wMarket: 0.25,
+          impliedHome: 0.60,
+          impliedDraw: 0.25,
+          impliedAway: 0.15,
+          bookmakers: 3,
+          modelHome: 0.53, // pre-blend model probs
+          modelDraw: 0.25,
+          modelAway: 0.22,
+        },
+        topScores: [{ h: 2, a: 1, p: 0.08, score: '2-1' }],
+        qualify: null,
+      },
+    ];
+
+    const cal = writeArtifactsComputeCalibration(matches, predictions);
+
+    expect(cal.played).toBe(1);
+    expect(cal.blendedMatches).toBe(1);
+
+    // Blended Brier (probs used in prediction): (0.55-1)^2 + (0.25-0)^2 + (0.20-0)^2 = 0.2025 + 0.0625 + 0.04 = 0.305
+    expect(cal.brier).toBeCloseTo(0.305, 3);
+
+    // Model-only Brier: (0.53-1)^2 + (0.25-0)^2 + (0.22-0)^2 = 0.2209 + 0.0625 + 0.0484 = 0.3318
+    expect(cal.brierModelOnly).toBeCloseTo(0.3318, 3);
+
+    // In this case, blend is closer to actual (home win) than model-only
+    expect(cal.brier).toBeLessThan(cal.brierModelOnly);
+  });
+});

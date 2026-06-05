@@ -61,7 +61,16 @@
     "attack": "כוח התקפה",
     "defence": "הגנת יריב",
     "form": "כושר אחרון",
-    "venue": "יתרון מגרש"
+    "venue": "יתרון מגרש",
+    "suspension": "השעיה / הרחקה",
+    "market": "אות שוק"
+  },
+  "market": {
+    "title": "אות שוק",
+    "blendWeight": "משקל שוק",
+    "impliedProbs": "הסתברויות גלומות",
+    "bookmakers": "בתי הימורים",
+    "modelOnly": "מודל בלבד"
   },
   "guess": {
     "title": "נחש את התוצאה",

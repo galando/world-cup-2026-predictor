@@ -59,3 +59,8 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
+.marketMeta {
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}

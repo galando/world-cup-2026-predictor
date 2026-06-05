@@ -1,6 +1,10 @@
 /**
  * Run Dixon-Coles predictions for all matches.
  * Imports the shared engine from src/engine/.
+ *
+ * Optional: suspension map and market implied probability map.
+ * - Suspension map: team -> availabilityMult (reduces lambda for suspended teams)
+ * - Market map: matchKey -> implied P (blended with model at w_market=0.25)
  */
 
 import { buildGrid, applyDixonColes, aggregateOutcome, topScorelines } from '../../src/engine/poisson-dc.js';
@@ -15,6 +19,9 @@ const HOME_ADVANTAGE_HOST = Math.log(1.15);
  * These are the only teams that receive a home advantage boost.
  */
 const HOST_NATIONS = new Set(['MEX', 'USA', 'CAN']);
+
+/** Market blend weight: 25% market, 75% model */
+const W_MARKET = 0.25;
 
 /**
  * Compute home advantage for a match.
@@ -48,7 +55,7 @@ function getHomeAdvantage(teamCode, isHome, matchVenue) {
  * Build factor chain for a team's lambda computation.
  * Used in the WhyPanel UI.
  */
-function buildFactorChain(teamData, opponentData, isHome, match) {
+function buildFactorChain(teamData, opponentData, isHome, match, suspensionMap) {
   const eloDiff = teamData.elo - opponentData.elo;
   const lambdaDiff = eloToLambdaDiff(eloDiff);
   const eloMult = Math.exp(lambdaDiff);
@@ -64,19 +71,33 @@ function buildFactorChain(teamData, opponentData, isHome, match) {
     ? formArr.reduce((acc, r) => acc + (r === 'W' ? 1.05 : r === 'D' ? 1.0 : 0.95), 0) / formArr.length
     : 1;
 
-  return [
+  const chain = [
     { key: 'base', label_he: 'בסיס', mult: BASELINE_LAMBDA },
     { key: 'atk', label_he: 'כוח התקפה', mult: parseFloat(atkMult.toFixed(2)) },
     { key: 'def', label_he: 'הגנת יריב', mult: parseFloat(defMult.toFixed(2)) },
     { key: 'form', label_he: 'כושר אחרון', mult: parseFloat(formWeight.toFixed(2)) },
     { key: 'venue', label_he: 'יתרון מגרש', mult: parseFloat(venueMult.toFixed(2)) },
   ];
+
+  // Add suspension factor if applicable
+  if (suspensionMap) {
+    const suspension = suspensionMap.get(teamData.code);
+    if (suspension && suspension.availabilityMult !== 1) {
+      chain.push({
+        key: 'suspension',
+        label_he: 'השעיה / הרחקה',
+        mult: parseFloat(suspension.availabilityMult.toFixed(2)),
+      });
+    }
+  }
+
+  return chain;
 }
 
 /**
  * Compute lambda for a team given all available data.
  */
-function computeLambda(teamData, opponentData, isHome, match) {
+function computeLambda(teamData, opponentData, isHome, match, suspensionMap) {
   const eloDiff = teamData.elo - opponentData.elo;
   const lambdaDiff = eloToLambdaDiff(eloDiff);
   let lambda = BASELINE_LAMBDA * Math.exp(lambdaDiff);
@@ -102,14 +123,34 @@ function computeLambda(teamData, opponentData, isHome, match) {
     lambda *= formWeight;
   }
 
+  // Suspension multiplier
+  if (suspensionMap) {
+    const suspension = suspensionMap.get(teamData.code);
+    if (suspension && suspension.availabilityMult !== 1) {
+      lambda *= suspension.availabilityMult;
+    }
+  }
+
   return Math.max(0.1, lambda); // Floor at 0.1 to prevent degenerate predictions
+}
+
+/**
+ * Build market key matching the format used by build-market.js.
+ */
+function marketKey(homeCode, awayCode) {
+  return `${homeCode}-${awayCode}`;
 }
 
 /**
  * Run predictions for all matches.
  * Returns predictions array matching the TECHNICAL_PLAN schema.
+ *
+ * @param {Array} matches - Match objects
+ * @param {Object} teams - Team data map
+ * @param {Map} [suspensionMap] - Optional: team -> {availabilityMult, reason}
+ * @param {Map} [marketMap] - Optional: matchKey -> {pHome, pDraw, pAway, bookmakers}
  */
-export function runPredictions(matches, teams) {
+export function runPredictions(matches, teams, suspensionMap, marketMap) {
   const predictions = [];
   const isKnockout = (stage) => ['r32', 'r16', 'qf', 'sf', 'final', 'third'].includes(stage);
 
@@ -122,8 +163,8 @@ export function runPredictions(matches, teams) {
       continue;
     }
 
-    const lambdaH = computeLambda(homeData, awayData, true, match);
-    const lambdaA = computeLambda(awayData, homeData, false, match);
+    const lambdaH = computeLambda(homeData, awayData, true, match, suspensionMap);
+    const lambdaA = computeLambda(awayData, homeData, false, match, suspensionMap);
 
     const rawGrid = buildGrid(lambdaH, lambdaA);
     const grid = applyDixonColes(rawGrid, lambdaH, lambdaA, -0.05);
@@ -139,11 +180,11 @@ export function runPredictions(matches, teams) {
       factors: {
         home: {
           lambda: parseFloat(lambdaH.toFixed(4)),
-          chain: buildFactorChain(homeData, awayData, true, match),
+          chain: buildFactorChain(homeData, awayData, true, match, suspensionMap),
         },
         away: {
           lambda: parseFloat(lambdaA.toFixed(4)),
-          chain: buildFactorChain(awayData, homeData, false, match),
+          chain: buildFactorChain(awayData, homeData, false, match, suspensionMap),
         },
       },
       probs: {
@@ -159,8 +200,39 @@ export function runPredictions(matches, teams) {
         p: parseFloat(s.p.toFixed(4)),
       })),
       scoreMatrix: grid.map(row => row.map(v => parseFloat(v.toFixed(6)))),
-      modelVersion: 'dc-1.0',
+      modelVersion: 'dc-1.1',
     };
+
+    // Market blend: if market data available for this match, blend model + market
+    const mktKey = marketKey(match.homeTeam, match.awayTeam);
+    const mktData = marketMap ? marketMap.get(mktKey) : null;
+
+    if (mktData) {
+      // Store model-only probs before blend for Brier comparison
+      const modelHome = probs.home;
+      const modelDraw = probs.draw;
+      const modelAway = probs.away;
+
+      const blendedHome = (1 - W_MARKET) * probs.home + W_MARKET * mktData.pHome;
+      const blendedDraw = (1 - W_MARKET) * probs.draw + W_MARKET * mktData.pDraw;
+      const blendedAway = (1 - W_MARKET) * probs.away + W_MARKET * mktData.pAway;
+
+      prediction.market = {
+        wMarket: W_MARKET,
+        impliedHome: parseFloat(mktData.pHome.toFixed(4)),
+        impliedDraw: parseFloat(mktData.pDraw.toFixed(4)),
+        impliedAway: parseFloat(mktData.pAway.toFixed(4)),
+        bookmakers: mktData.bookmakers,
+        modelHome: parseFloat(modelHome.toFixed(4)),
+        modelDraw: parseFloat(modelDraw.toFixed(4)),
+        modelAway: parseFloat(modelAway.toFixed(4)),
+      };
+
+      // Override probs with blended values
+      prediction.probs.home = parseFloat(blendedHome.toFixed(4));
+      prediction.probs.draw = parseFloat(blendedDraw.toFixed(4));
+      prediction.probs.away = parseFloat(blendedAway.toFixed(4));
+    }
 
     // Add qualify probabilities for knockout matches
     if (isKnockout(match.stage)) {

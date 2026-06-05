@@ -9,6 +9,7 @@ dist/
 *.log
 coverage/
 scripts/cache/
+!scripts/cache/odds.json
 public/data/*.json
 !public/data/.gitkeep
 .playwright-mcp/

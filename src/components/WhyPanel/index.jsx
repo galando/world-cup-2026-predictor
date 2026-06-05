@@ -8,7 +8,7 @@ function FactorDot({ mult }) {
   return <span className={styles.dot} style={{ backgroundColor: color }} />;
 }
 
-export default function WhyPanel({ factors, lambdaHome, lambdaAway, homeName, awayName }) {
+export default function WhyPanel({ factors, lambdaHome, lambdaAway, homeName, awayName, market }) {
   const { t, i18n } = useTranslation();
   const [open, setOpen] = useState(false);
 
@@ -45,6 +45,34 @@ export default function WhyPanel({ factors, lambdaHome, lambdaAway, homeName, aw
             </div>
             <div className={styles.chain}>{renderChain(factors.away.chain)}</div>
           </div>
+          {market && (
+            <div className={styles.teamBlock}>
+              <div className={styles.teamHeader}>
+                {t('market.title')}
+              </div>
+              <div className={styles.chain}>
+                <span className={styles.chainItem}>
+                  <span className={styles.chainLabel}>{t('market.blendWeight')}</span>
+                  <span className={styles.chainMult}>{Math.round(market.wMarket * 100)}%</span>
+                </span>
+                <span className={styles.chainItem}>
+                  <span className={styles.chainLabel}>{homeName}</span>
+                  <span className={styles.chainMult}>{Math.round(market.impliedHome * 100)}%</span>
+                </span>
+                <span className={styles.chainItem}>
+                  <span className={styles.chainLabel}>{t('prediction.draw')}</span>
+                  <span className={styles.chainMult}>{Math.round(market.impliedDraw * 100)}%</span>
+                </span>
+                <span className={styles.chainItem}>
+                  <span className={styles.chainLabel}>{awayName}</span>
+                  <span className={styles.chainMult}>{Math.round(market.impliedAway * 100)}%</span>
+                </span>
+              </div>
+              <div className={styles.marketMeta}>
+                {t('market.bookmakers')}: {market.bookmakers}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
