@@ -148,5 +148,18 @@
     "winnerHit": "Correct winner predicted",
     "exactHit": "Exact score predicted",
     "brier": "Brier score"
+  },
+  "methodology": {
+    "title": "How predictions are calculated",
+    "step1Title": "Elo Ratings → Expected Goals (λ)",
+    "step1Desc": "Each team has an Elo rating from eloratings.net. The rating difference between two teams is converted into an expected goals value (λ) using a Poisson model. A higher Elo difference means a stronger team is expected to score more.",
+    "step2Title": "Tournament Performance Adjustments",
+    "step2Desc": "Once the tournament starts, attack strength, defence quality, and recent form (W/D/L) are factored in. These multiply the base λ — a team scoring well gets a boost, a team conceding heavily gets a penalty.",
+    "step3Title": "Suspension Factor",
+    "step3Desc": "Red cards from previous matches result in automatic 1-match bans. A team with a suspended player gets a 0.92x multiplier on their expected goals, reflecting the reduced squad strength.",
+    "step4Title": "Poisson Grid → Match Probabilities",
+    "step4Desc": "The two teams' λ values are fed into a Dixon-Coles Poisson model to generate a score matrix. Summing the probabilities gives us the chance of home win, draw, or away win (90 minutes).",
+    "step5Title": "Market Signal Blend",
+    "step5Desc": "When available, betting odds from multiple bookmakers are converted to implied probabilities (after removing the bookmaker margin). These are blended with the model's probabilities: 75% model + 25% market. This improves calibration by incorporating expert and quantitative consensus."
   }
 }

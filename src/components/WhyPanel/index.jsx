@@ -73,6 +73,51 @@ export default function WhyPanel({ factors, lambdaHome, lambdaAway, homeName, aw
               </div>
             </div>
           )}
+
+          {/* Methodology explanation */}
+          <div className={styles.methodology}>
+            <div className={styles.methodTitle}>{t('methodology.title')}</div>
+
+            <div className={styles.methodStep}>
+              <span className={styles.stepNum}>1</span>
+              <div>
+                <strong>{t('methodology.step1Title')}</strong>
+                <p>{t('methodology.step1Desc')}</p>
+              </div>
+            </div>
+
+            <div className={styles.methodStep}>
+              <span className={styles.stepNum}>2</span>
+              <div>
+                <strong>{t('methodology.step2Title')}</strong>
+                <p>{t('methodology.step2Desc')}</p>
+              </div>
+            </div>
+
+            <div className={styles.methodStep}>
+              <span className={styles.stepNum}>3</span>
+              <div>
+                <strong>{t('methodology.step3Title')}</strong>
+                <p>{t('methodology.step3Desc')}</p>
+              </div>
+            </div>
+
+            <div className={styles.methodStep}>
+              <span className={styles.stepNum}>4</span>
+              <div>
+                <strong>{t('methodology.step4Title')}</strong>
+                <p>{t('methodology.step4Desc')}</p>
+              </div>
+            </div>
+
+            <div className={styles.methodStep}>
+              <span className={styles.stepNum}>5</span>
+              <div>
+                <strong>{t('methodology.step5Title')}</strong>
+                <p>{t('methodology.step5Desc')}</p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
