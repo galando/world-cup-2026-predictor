@@ -82,15 +82,15 @@ describe('fetch-odds staleness and cache fallback (Scenarios 4+7)', () => {
     writeMockCache(0);
     expect(cacheAgeHours(CACHE_FILE)).toBeLessThan(0.1);
 
-    // 2-hour-old cache — still fresh
-    writeMockCache(2);
-    expect(cacheAgeHours(CACHE_FILE)).toBeGreaterThan(1.9);
-    expect(cacheAgeHours(CACHE_FILE)).toBeLessThan(2.1);
-    expect(cacheAgeHours(CACHE_FILE)).toBeLessThan(4); // under threshold
+    // 6-hour-old cache — still fresh (under 12h threshold)
+    writeMockCache(6);
+    expect(cacheAgeHours(CACHE_FILE)).toBeGreaterThan(5.9);
+    expect(cacheAgeHours(CACHE_FILE)).toBeLessThan(6.1);
+    expect(cacheAgeHours(CACHE_FILE)).toBeLessThan(12); // under threshold
 
-    // 5-hour-old cache — stale
-    writeMockCache(5);
-    expect(cacheAgeHours(CACHE_FILE)).toBeGreaterThan(4); // over threshold
+    // 13-hour-old cache — stale (over 12h threshold)
+    writeMockCache(13);
+    expect(cacheAgeHours(CACHE_FILE)).toBeGreaterThan(12); // over threshold
 
     // Missing cache
     removeMockCache();
@@ -99,7 +99,7 @@ describe('fetch-odds staleness and cache fallback (Scenarios 4+7)', () => {
 
   it('falls back to cache on API failure (Scenario 4)', async () => {
     // Write a stale cache so the fetch will be attempted
-    writeMockCache(10);
+    writeMockCache(15);
 
     // The fetch will fail because the API key is invalid
     // But the module should fall back to its own cache if it exists

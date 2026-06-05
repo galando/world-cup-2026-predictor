@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_FILE  = join(__dirname, '..', 'cache', 'odds.json');
 const ODDS_URL    = 'https://api.the-odds-api.com/v4/sports/soccer_fifa_world_cup/odds/';
-const STALE_HOURS = 4;
+const STALE_HOURS = 12;
 
 /**
  * Check cache age in hours. Returns Infinity if no cache exists.
