@@ -27,6 +27,11 @@ import { fetchAndUpdateElo } from './lib/fetch-elo.js';
 import { fetchOdds } from './lib/fetch-odds.js';
 import { buildMarket } from './lib/build-market.js';
 import { buildSuspensions } from './lib/build-suspensions.js';
+import { fetchQualifiers } from './lib/fetch-qualifiers.js';
+import { buildQualifierForm } from './lib/build-qualifier-form.js';
+import { runMonteCarlo } from './lib/run-monte-carlo.js';
+import { buildCalibration } from './lib/build-calibration.js';
+import { loadXgData } from './lib/fetch-xg.js';
 
 const startTime = Date.now();
 
@@ -36,22 +41,22 @@ async function main() {
 
   try {
     // Step 1: Refresh Elo from eloratings.net if >23h stale
-    console.log('[1/12] Refreshing Elo ratings...');
+    console.log('[1/15] Refreshing Elo ratings...');
     await fetchAndUpdateElo();
     const eloMap = loadElo();
     console.log(`  Loaded ${eloMap.size} team Elo ratings`);
 
     // Step 2: Load teams metadata
-    console.log('[2/12] Loading teams metadata...');
+    console.log('[2/15] Loading teams metadata...');
     const teamsMeta = JSON.parse(readFileSync(join(__dirname, 'data', 'teams-meta.json'), 'utf8'));
     console.log(`  Loaded ${Object.keys(teamsMeta).length} team entries`);
 
     // Step 3: Load R32 seeding table
-    console.log('[3/12] Loading R32 seeding table...');
+    console.log('[3/15] Loading R32 seeding table...');
     const seedingData = JSON.parse(readFileSync(join(__dirname, 'data', 'r32-seeding-table.json'), 'utf8'));
 
     // Step 4: Fetch OpenFootball fixtures (with graceful fallback)
-    console.log('[4/12] Fetching OpenFootball fixtures...');
+    console.log('[4/15] Fetching OpenFootball fixtures...');
     let rawMatches = [];
     try {
       const ofData = await fetchOpenFootball();
@@ -67,7 +72,7 @@ async function main() {
     console.log(`  Total matches: ${matches.length}`);
 
     // Step 5: Fetch results from Football-Data.org (optional)
-    console.log('[5/12] Fetching match results...');
+    console.log('[5/15] Fetching match results...');
     const apiKey = process.env.FD_API_KEY;
     if (apiKey) {
       try {
@@ -83,7 +88,7 @@ async function main() {
     }
 
     // Step 5.5: Fetch odds from The Odds API (optional, with caching)
-    console.log('[6/12] Fetching market odds...');
+    console.log('[6/15] Fetching market odds...');
     const oddsApiKey = process.env.ODDS_API_KEY;
     let marketMap = new Map();
     try {
@@ -99,7 +104,7 @@ async function main() {
     }
 
     // Step 5.6: Build suspension map from red card events
-    console.log('[7/12] Building suspension map...');
+    console.log('[7/15] Building suspension map...');
     const suspensionMap = buildSuspensions(matches);
     if (suspensionMap.size > 0) {
       console.log(`  Found ${suspensionMap.size} teams with suspensions`);
@@ -107,13 +112,44 @@ async function main() {
       console.log('  No suspensions detected');
     }
 
-    // Step 6: Compute team strengths
-    console.log('[8/12] Computing team strengths...');
-    const { teams } = computeTeams(matches, eloMap, teamsMeta);
+    // Step 5.7: Fetch qualifier data (optional, graceful)
+    console.log('[8/15] Fetching qualifier form data...');
+    let qualifierPriors = new Map();
+    try {
+      if (apiKey) {
+        const qualifierData = await fetchQualifiers(apiKey, teamsMeta);
+        if (qualifierData) {
+          qualifierPriors = buildQualifierForm(qualifierData, eloMap);
+          console.log(`  Built qualifier priors for ${qualifierPriors.size} teams`);
+        }
+      } else {
+        console.log('  No FD_API_KEY, skipping qualifier fetch');
+      }
+    } catch (err) {
+      console.warn(`  Qualifier processing failed (non-critical): ${err.message}`);
+    }
+
+    // Step 5.8: Load xG data (optional, graceful)
+    console.log('[9/15] Loading xG snapshot data...');
+    let xgData = null;
+    try {
+      xgData = loadXgData();
+      if (xgData) {
+        console.log(`  Loaded xG data for ${Object.keys(xgData.teams).length} teams`);
+      } else {
+        console.log('  No xG snapshot available');
+      }
+    } catch (err) {
+      console.warn(`  xG loading failed (non-critical): ${err.message}`);
+    }
+
+    // Step 6: Compute team strengths (with optional qualifier priors + xG)
+    console.log('[10/15] Computing team strengths...');
+    const { teams } = computeTeams(matches, eloMap, teamsMeta, qualifierPriors, xgData);
     console.log(`  Computed data for ${Object.keys(teams).length} teams`);
 
     // Step 7: Run predictions (with suspension + market blend)
-    console.log('[9/12] Running Dixon-Coles predictions...');
+    console.log('[11/15] Running Dixon-Coles predictions...');
     const predictions = runPredictions(matches, teams, suspensionMap, marketMap);
     console.log(`  Generated ${predictions.length} predictions`);
     const blendedCount = predictions.filter(p => p.market).length;
@@ -122,14 +158,39 @@ async function main() {
     }
 
     // Step 8: Build standings + bracket
-    console.log('[10/12] Building standings and bracket...');
+    console.log('[12/15] Building standings and bracket...');
     const standings = buildStandings(matches, teamsMeta);
     const bracket = buildBracket(standings, predictions, seedingData);
     console.log(`  Built standings for ${Object.keys(standings.groups).length} groups`);
     console.log(`  Advancing 3rd-place teams: ${standings.advancingThirdPlace.length}`);
 
-    // Step 9: Write all artifacts
-    console.log('[11/12] Writing artifacts...');
+    // Step 9: Run Monte Carlo simulation (optional, graceful)
+    console.log('[13/15] Running Monte Carlo simulation...');
+    let tournamentProbs = null;
+    try {
+      tournamentProbs = runMonteCarlo({
+        matches, predictions, teams, teamsMeta,
+        standings: standings.groups, bracket, seedingData,
+        n: 10000,
+      });
+    } catch (err) {
+      console.warn(`  Monte Carlo failed (non-critical): ${err.message}`);
+    }
+
+    // Step 10: Build enhanced calibration
+    console.log('[14/16] Building calibration metrics...');
+    let enhancedCalibration = null;
+    try {
+      enhancedCalibration = buildCalibration(matches, predictions);
+      if (enhancedCalibration.played > 0) {
+        console.log(`  Calibration: ${enhancedCalibration.played} matches, Brier=${enhancedCalibration.brier.overall}`);
+      }
+    } catch (err) {
+      console.warn(`  Calibration failed (non-critical): ${err.message}`);
+    }
+
+    // Step 11: Write all artifacts
+    console.log('[15/16] Writing artifacts...');
     writeArtifacts({
       matches,
       predictions,
@@ -138,16 +199,27 @@ async function main() {
       standings: standings.groups,
       bracket,
       marketMap,
+      tournamentProbs,
+      enhancedCalibration,
     });
 
-    // Step 10: Summary
+    // Step 12: Summary
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    console.log(`\n[12/12] === Build complete in ${elapsed}s ===`);
+    console.log(`\n[16/16] === Build complete in ${elapsed}s ===`);
     if (suspensionMap.size > 0) {
       console.log(`  Suspensions: ${[...suspensionMap.entries()].map(([t, s]) => `${t} (${s.availabilityMult})`).join(', ')}`);
     }
     if (marketMap.size > 0) {
       console.log(`  Market blend: ${blendedCount}/${predictions.length} matches`);
+    }
+    if (tournamentProbs) {
+      console.log(`  Monte Carlo: ${tournamentProbs.simulations} simulations`);
+    }
+    if (qualifierPriors.size > 0) {
+      console.log(`  Qualifier priors: ${qualifierPriors.size} teams`);
+    }
+    if (xgData) {
+      console.log(`  xG data: ${Object.keys(xgData.teams).length} teams`);
     }
 
   } catch (err) {

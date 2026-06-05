@@ -55,7 +55,7 @@ function getHomeAdvantage(teamCode, isHome, matchVenue) {
  * Build factor chain for a team's lambda computation.
  * Used in the WhyPanel UI.
  */
-function buildFactorChain(teamData, opponentData, isHome, match, suspensionMap) {
+function buildFactorChain(teamData, opponentData, isHome, match, suspensionMap, factorMaps) {
   const eloDiff = teamData.elo - opponentData.elo;
   const lambdaDiff = eloToLambdaDiff(eloDiff);
   const eloMult = Math.exp(lambdaDiff);
@@ -91,13 +91,52 @@ function buildFactorChain(teamData, opponentData, isHome, match, suspensionMap) 
     }
   }
 
+  // Add new Phase 2 factors if available
+  if (factorMaps) {
+    const { fatigueMap, altitudeMap, h2hMap, squadValueMap } = factorMaps;
+    const matchKey = match.matchId;
+    const teamCode = teamData.code;
+
+    // Fatigue
+    if (fatigueMap) {
+      const fatigue = fatigueMap.get(`${matchKey}:${teamCode}`) || fatigueMap.get(teamCode);
+      if (fatigue && fatigue !== 1) {
+        chain.push({ key: 'fatigue', label_he: 'עייפות / נסיעות', mult: parseFloat(fatigue.toFixed(2)) });
+      }
+    }
+
+    // Altitude
+    if (altitudeMap) {
+      const alt = altitudeMap.get(matchKey);
+      if (alt && alt !== 1) {
+        chain.push({ key: 'altitude', label_he: 'גובה מעל פני הים', mult: parseFloat(alt.toFixed(2)) });
+      }
+    }
+
+    // H2H
+    if (h2hMap) {
+      const h2h = h2hMap.get(`${teamCode}:${opponentData.code}`);
+      if (h2h && h2h !== 1) {
+        chain.push({ key: 'h2h', label_he: 'מפגשים ישירים', mult: parseFloat(h2h.toFixed(2)) });
+      }
+    }
+
+    // Squad value
+    if (squadValueMap) {
+      const sv = squadValueMap.get(`${matchKey}:${teamCode}`) || squadValueMap.get(teamCode);
+      if (sv && sv !== 1) {
+        chain.push({ key: 'squadValue', label_he: 'ערך סגל', mult: parseFloat(sv.toFixed(2)) });
+      }
+    }
+  }
+
   return chain;
 }
 
 /**
  * Compute lambda for a team given all available data.
  */
-function computeLambda(teamData, opponentData, isHome, match, suspensionMap) {
+function computeLambda(teamData, opponentData, isHome, match, suspensionMap, factorMaps) {
   const eloDiff = teamData.elo - opponentData.elo;
   const lambdaDiff = eloToLambdaDiff(eloDiff);
   let lambda = BASELINE_LAMBDA * Math.exp(lambdaDiff);
@@ -131,6 +170,33 @@ function computeLambda(teamData, opponentData, isHome, match, suspensionMap) {
     }
   }
 
+  // Phase 2 factors: fatigue, altitude, H2H, squad value
+  if (factorMaps) {
+    const { fatigueMap, altitudeMap, h2hMap, squadValueMap } = factorMaps;
+    const matchKey = match.matchId;
+    const teamCode = teamData.code;
+
+    if (fatigueMap) {
+      const fatigue = fatigueMap.get(`${matchKey}:${teamCode}`) || fatigueMap.get(teamCode);
+      if (fatigue && fatigue !== 1) lambda *= fatigue;
+    }
+
+    if (altitudeMap) {
+      const alt = altitudeMap.get(matchKey);
+      if (alt && alt !== 1) lambda *= alt;
+    }
+
+    if (h2hMap) {
+      const h2h = h2hMap.get(`${teamCode}:${opponentData.code}`);
+      if (h2h && h2h !== 1) lambda *= h2h;
+    }
+
+    if (squadValueMap) {
+      const sv = squadValueMap.get(`${matchKey}:${teamCode}`) || squadValueMap.get(teamCode);
+      if (sv && sv !== 1) lambda *= sv;
+    }
+  }
+
   return Math.max(0.1, lambda); // Floor at 0.1 to prevent degenerate predictions
 }
 
@@ -149,8 +215,9 @@ function marketKey(homeCode, awayCode) {
  * @param {Object} teams - Team data map
  * @param {Map} [suspensionMap] - Optional: team -> {availabilityMult, reason}
  * @param {Map} [marketMap] - Optional: matchKey -> {pHome, pDraw, pAway, bookmakers}
+ * @param {Object} [factorMaps] - Optional: { fatigueMap, altitudeMap, h2hMap, squadValueMap }
  */
-export function runPredictions(matches, teams, suspensionMap, marketMap) {
+export function runPredictions(matches, teams, suspensionMap, marketMap, factorMaps) {
   const predictions = [];
   const isKnockout = (stage) => ['r32', 'r16', 'qf', 'sf', 'final', 'third'].includes(stage);
 
@@ -163,8 +230,8 @@ export function runPredictions(matches, teams, suspensionMap, marketMap) {
       continue;
     }
 
-    const lambdaH = computeLambda(homeData, awayData, true, match, suspensionMap);
-    const lambdaA = computeLambda(awayData, homeData, false, match, suspensionMap);
+    const lambdaH = computeLambda(homeData, awayData, true, match, suspensionMap, factorMaps);
+    const lambdaA = computeLambda(awayData, homeData, false, match, suspensionMap, factorMaps);
 
     const rawGrid = buildGrid(lambdaH, lambdaA);
     const grid = applyDixonColes(rawGrid, lambdaH, lambdaA, -0.05);
@@ -180,11 +247,11 @@ export function runPredictions(matches, teams, suspensionMap, marketMap) {
       factors: {
         home: {
           lambda: parseFloat(lambdaH.toFixed(4)),
-          chain: buildFactorChain(homeData, awayData, true, match, suspensionMap),
+          chain: buildFactorChain(homeData, awayData, true, match, suspensionMap, factorMaps),
         },
         away: {
           lambda: parseFloat(lambdaA.toFixed(4)),
-          chain: buildFactorChain(awayData, homeData, false, match, suspensionMap),
+          chain: buildFactorChain(awayData, homeData, false, match, suspensionMap, factorMaps),
         },
       },
       probs: {

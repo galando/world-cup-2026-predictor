@@ -1,0 +1,149 @@
+{
+  "description": "World Cup 2026 venues with coordinates, altitude, and capacity. Sources: FIFA official venue list, Google Maps for coordinates.",
+  "venues": [
+    {
+      "name": "Estadio Azteca",
+      "city": "Mexico City",
+      "country": "MEX",
+      "latitude": 19.3022,
+      "longitude": -99.1506,
+      "altitude": 2240,
+      "capacity": 87000
+    },
+    {
+      "name": "Estadio BBVA",
+      "city": "Monterrey",
+      "country": "MEX",
+      "latitude": 25.7688,
+      "longitude": -100.1142,
+      "altitude": 540,
+      "capacity": 53000
+    },
+    {
+      "name": "Estadio Akron",
+      "city": "Guadalajara",
+      "country": "MEX",
+      "latitude": 20.6133,
+      "longitude": -103.3147,
+      "altitude": 1566,
+      "capacity": 49000
+    },
+    {
+      "name": "SoFi Stadium",
+      "city": "Inglewood",
+      "country": "USA",
+      "latitude": 33.9535,
+      "longitude": -118.3390,
+      "altitude": 30,
+      "capacity": 70000
+    },
+    {
+      "name": "MetLife Stadium",
+      "city": "East Rutherford",
+      "country": "USA",
+      "latitude": 40.8131,
+      "longitude": -74.0742,
+      "altitude": 10,
+      "capacity": 82500
+    },
+    {
+      "name": "AT&T Stadium",
+      "city": "Arlington",
+      "country": "USA",
+      "latitude": 32.7473,
+      "longitude": -97.0945,
+      "altitude": 180,
+      "capacity": 80000
+    },
+    {
+      "name": "Hard Rock Stadium",
+      "city": "Miami Gardens",
+      "country": "USA",
+      "latitude": 25.9580,
+      "longitude": -80.2389,
+      "altitude": 3,
+      "capacity": 65000
+    },
+    {
+      "name": "Mercedes-Benz Stadium",
+      "city": "Atlanta",
+      "country": "USA",
+      "latitude": 33.7554,
+      "longitude": -84.4007,
+      "altitude": 300,
+      "capacity": 71000
+    },
+    {
+      "name": "Lumen Field",
+      "city": "Seattle",
+      "country": "USA",
+      "latitude": 47.5952,
+      "longitude": -122.3316,
+      "altitude": 10,
+      "capacity": 69000
+    },
+    {
+      "name": "Gillette Stadium",
+      "city": "Foxborough",
+      "country": "USA",
+      "latitude": 42.0909,
+      "longitude": -71.2644,
+      "altitude": 60,
+      "capacity": 65000
+    },
+    {
+      "name": "Lincoln Financial Field",
+      "city": "Philadelphia",
+      "country": "USA",
+      "latitude": 39.9008,
+      "longitude": -75.1674,
+      "altitude": 10,
+      "capacity": 69000
+    },
+    {
+      "name": "NRG Stadium",
+      "city": "Houston",
+      "country": "USA",
+      "latitude": 29.6847,
+      "longitude": -95.4107,
+      "altitude": 15,
+      "capacity": 72000
+    },
+    {
+      "name": "Arrowhead Stadium",
+      "city": "Kansas City",
+      "country": "USA",
+      "latitude": 39.0489,
+      "longitude": -94.4839,
+      "altitude": 270,
+      "capacity": 67000
+    },
+    {
+      "name": "Levi's Stadium",
+      "city": "Santa Clara",
+      "country": "USA",
+      "latitude": 37.4032,
+      "longitude": -121.9698,
+      "altitude": 10,
+      "capacity": 68000
+    },
+    {
+      "name": "BMO Field",
+      "city": "Toronto",
+      "country": "CAN",
+      "latitude": 43.6262,
+      "longitude": -79.4243,
+      "altitude": 100,
+      "capacity": 45000
+    },
+    {
+      "name": "BC Place",
+      "city": "Vancouver",
+      "country": "CAN",
+      "latitude": 49.2768,
+      "longitude": -123.1120,
+      "altitude": 10,
+      "capacity": 54000
+    }
+  ]
+}

@@ -63,7 +63,11 @@
     "form": "Recent Form",
     "venue": "Home Advantage",
     "suspension": "Suspension",
-    "market": "Market Signal"
+    "market": "Market Signal",
+    "fatigue": "Travel Fatigue",
+    "altitude": "Altitude",
+    "h2h": "Head to Head",
+    "squadValue": "Squad Value"
   },
   "market": {
     "title": "Market Signal",
@@ -147,7 +151,37 @@
     "played": "Matches played",
     "winnerHit": "Correct winner predicted",
     "exactHit": "Exact score predicted",
-    "brier": "Brier score"
+    "brier": "Brier score",
+    "title": "Model Accuracy",
+    "logLoss": "Log Loss",
+    "hitRate": "Hit Rate",
+    "calibrationCurve": "Calibration Curve",
+    "perMatch": "Per-Match Breakdown",
+    "modelOnly": "Model Only",
+    "blended": "Blended"
+  },
+  "tournament": {
+    "title": "Tournament Probabilities",
+    "probR16": "R16 %",
+    "probQF": "QF %",
+    "probSF": "SF %",
+    "probFinal": "Final %",
+    "probWin": "Win %",
+    "simulations": "Simulations",
+    "mostLikely": "Most Likely Champion",
+    "team": "Team"
+  },
+  "scenario": {
+    "title": "Scenario Explorer",
+    "reset": "Reset",
+    "override": "Override Result",
+    "whatIf": "What-If",
+    "homeWin": "Home Win",
+    "draw": "Draw",
+    "awayWin": "Away Win",
+    "original": "Original",
+    "updated": "Updated",
+    "selectMatch": "Select a match to override"
   },
   "methodology": {
     "title": "How predictions are calculated",

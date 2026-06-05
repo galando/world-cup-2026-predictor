@@ -4,12 +4,19 @@
  */
 
 import { BASELINE_LAMBDA, computeAttackDefence, eloToLambdaDiff } from '../../src/engine/calibrate.js';
+import { loadXgData, computeXgParams, blendXgParams } from './fetch-xg.js';
 
 /**
  * Compute team data from finished matches and Elo ratings.
  * Returns { teams: Object<code, teamData>, attack, defence }
+ *
+ * @param {Array} matches - Match objects
+ * @param {Map} eloMap - Team code -> Elo rating
+ * @param {Object} teamsMeta - Team metadata
+ * @param {Map} [qualifierPriors] - Optional: team -> { attack, defence, matches } from qualifiers
+ * @param {Object} [xgData] - Optional: xG snapshot data from loadXgData()
  */
-export function computeTeams(matches, eloMap, teamsMeta) {
+export function computeTeams(matches, eloMap, teamsMeta, qualifierPriors = new Map(), xgData = null) {
   // Build results array for attack/defence computation
   const results = [];
   for (const match of matches) {
@@ -28,8 +35,24 @@ export function computeTeams(matches, eloMap, teamsMeta) {
     });
   }
 
-  // Compute attack/defence params
+  // Compute attack/defence params from tournament data
   const { attack, defence } = computeAttackDefence(results, eloMap);
+
+  // Compute xG-based params if xG data is available
+  let finalAttack = attack;
+  let finalDefence = defence;
+  if (xgData) {
+    const { xgAttack, xgDefence } = computeXgParams(xgData);
+    // Build team match counts for blend decision
+    const teamInfo = {};
+    for (const r of results) {
+      if (!teamInfo[r.team]) teamInfo[r.team] = { matchesPlayed: 0 };
+      teamInfo[r.team].matchesPlayed++;
+    }
+    const blended = blendXgParams(attack, defence, xgAttack, xgDefence, teamInfo);
+    finalAttack = blended.attack;
+    finalDefence = blended.defence;
+  }
 
   // Build per-team data
   const teams = {};
@@ -39,6 +62,24 @@ export function computeTeams(matches, eloMap, teamsMeta) {
     const matchesPlayed = teamResults.length;
     const goalsFor = teamResults.reduce((sum, r) => sum + r.goalsFor, 0);
     const goalsAgainst = teamResults.reduce((sum, r) => sum + r.goalsAgainst, 0);
+
+    // Determine attack/defence: blend qualifier prior with tournament data + xG
+    let teamAttack = finalAttack[code] || 0;
+    let teamDefence = finalDefence[code] || 0;
+
+    const prior = qualifierPriors.get ? qualifierPriors.get(code) : qualifierPriors[code];
+
+    if (matchesPlayed === 0 && prior) {
+      // No tournament data: use qualifier prior
+      teamAttack = prior.attack;
+      teamDefence = prior.defence;
+    } else if (matchesPlayed > 0 && matchesPlayed < 3 && prior) {
+      // Partial tournament data: blend qualifier + tournament (already xG-blended)
+      const blendWeight = matchesPlayed / 3;
+      teamAttack = blendWeight * (finalAttack[code] || 0) + (1 - blendWeight) * prior.attack;
+      teamDefence = blendWeight * (finalDefence[code] || 0) + (1 - blendWeight) * prior.defence;
+    }
+    // else: 3+ tournament matches or no prior — use tournament data (existing behavior)
 
     teams[code] = {
       code,
@@ -50,8 +91,8 @@ export function computeTeams(matches, eloMap, teamsMeta) {
       group: meta.group || '',
       avgGoals: matchesPlayed > 0 ? goalsFor / matchesPlayed : BASELINE_LAMBDA,
       avgConceded: matchesPlayed > 0 ? goalsAgainst / matchesPlayed : BASELINE_LAMBDA,
-      attack: attack[code] || 0,
-      defence: defence[code] || 0,
+      attack: teamAttack,
+      defence: teamDefence,
       form: buildForm(teamResults),
       matchesPlayed,
     };

@@ -142,8 +142,10 @@ function buildMarketJson(predictions) {
  * @param {Object} params.standings
  * @param {Object} params.bracket
  * @param {Map} [params.marketMap] - Optional market implied probability map
+ * @param {Object} [params.tournamentProbs] - Optional Monte Carlo tournament probabilities
+ * @param {Object} [params.enhancedCalibration] - Optional enhanced calibration data
  */
-export function writeArtifacts({ matches, predictions, teams, teamsMeta, standings, bracket, marketMap }) {
+export function writeArtifacts({ matches, predictions, teams, teamsMeta, standings, bracket, marketMap, tournamentProbs, enhancedCalibration }) {
   // Validate before writing
   validatePredictions(predictions);
 
@@ -165,29 +167,37 @@ export function writeArtifacts({ matches, predictions, teams, teamsMeta, standin
   // 6. bracket.json
   writeJson('bracket.json', bracket);
 
-  // 7. calibration.json
-  const calibration = computeCalibration(matches, predictions);
-  writeJson('calibration.json', calibration);
-
-  // 8. market.json (implied probabilities only, no raw odds)
+  // 7. market.json (implied probabilities only, no raw odds)
   const marketEntries = buildMarketJson(predictions);
   writeJson('market.json', marketEntries);
 
-  // 9. lastUpdated.json
+  // 9. tournament-probs.json (Monte Carlo results)
+  if (tournamentProbs) {
+    writeJson('tournament-probs.json', tournamentProbs);
+  }
+
+  // 10. calibration.json (enhanced or basic)
+  if (enhancedCalibration) {
+    writeJson('calibration.json', enhancedCalibration);
+  } else {
+    const calibration = computeCalibration(matches, predictions);
+    writeJson('calibration.json', calibration);
+  }
+
+  // 11. lastUpdated.json
   writeJson('lastUpdated.json', {
     iso: new Date().toISOString(),
     source: 'build-data.js',
   });
 
   // Log calibration stats
-  if (calibration.played > 0) {
-    console.log(`[write-artifacts] Calibration: ${calibration.played} matches, Brier=${calibration.brier}, winner hit=${calibration.winnerHit}, exact hit=${calibration.exactHit}`);
-    if (calibration.blendedMatches > 0 && calibration.brierModelOnly !== null) {
-      console.log(`[write-artifacts] Market blend applied to ${calibration.blendedMatches} matches — blended Brier=${calibration.brier}, model-only Brier=${calibration.brierModelOnly}`);
-    }
+  const calForLog = enhancedCalibration || computeCalibration(matches, predictions);
+  if (calForLog.played > 0) {
+    const brierVal = typeof calForLog.brier === 'object' ? calForLog.brier.overall : calForLog.brier;
+    console.log(`[write-artifacts] Calibration: ${calForLog.played} matches, Brier=${brierVal}, winner hit=${calForLog.winnerHit}, exact hit=${calForLog.exactHit}`);
   }
 
-  const fileCount = 9;
+  const fileCount = tournamentProbs ? 11 : 10;
   console.log(`[write-artifacts] wrote ${fileCount} files to ${OUTPUT_DIR}`);
 }
 
