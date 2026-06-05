@@ -63,7 +63,11 @@
     "form": "כושר אחרון",
     "venue": "יתרון מגרש",
     "suspension": "השעיה / הרחקה",
-    "market": "אות שוק"
+    "market": "אות שוק",
+    "fatigue": "עייפות / נסיעות",
+    "altitude": "גובה מעל פני הים",
+    "h2h": "מפגשים ישירים",
+    "squadValue": "ערך סגל"
   },
   "market": {
     "title": "אות שוק",
@@ -147,7 +151,37 @@
     "played": "משחקים ששוחקו",
     "winnerHit": "ניבא נכון את המנצח",
     "exactHit": "ניבא את התוצאה המדויקת",
-    "brier": "ציון ברייר"
+    "brier": "ציון ברייר",
+    "title": "דיוק המודל",
+    "logLoss": "Log Loss",
+    "hitRate": "אחוז פגיעה",
+    "calibrationCurve": "עקומת כיול",
+    "perMatch": "פירוט לפי משחק",
+    "modelOnly": "מודל בלבד",
+    "blended": "מעורבב"
+  },
+  "tournament": {
+    "title": "הסתברויות טורניר",
+    "probR16": "32 אחרונות %",
+    "probQF": "רבע גמר %",
+    "probSF": "חצי גמר %",
+    "probFinal": "גמר %",
+    "probWin": "ניצחון %",
+    "simulations": "סימולציות",
+    "mostLikely": "אלופה הסתברותית",
+    "team": "נבחרת"
+  },
+  "scenario": {
+    "title": "חוקר תרחישים",
+    "reset": "איפוס",
+    "override": "שינוי תוצאה",
+    "whatIf": "מה אם",
+    "homeWin": "ניצחון בית",
+    "draw": "תיקו",
+    "awayWin": "ניצחון חוץ",
+    "original": "מקורי",
+    "updated": "מעודכן",
+    "selectMatch": "בחר משחק לשינוי"
   },
   "methodology": {
     "title": "איך מחושבות התחזיות",

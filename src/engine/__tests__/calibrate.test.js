@@ -297,3 +297,61 @@ describe('computeAttackDefence', () => {
     expect(attack.BRA).toBeDefined();
   });
 });
+
+describe('getTeamLambda new optional factors', () => {
+  it('fatigueMult reduces lambda when < 1', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaFatigued = getTeamLambda(team, opponent, { fatigueMult: 0.95 });
+    expect(lambdaFatigued).toBeCloseTo(lambdaBase * 0.95, 6);
+  });
+
+  it('altitudeMult reduces lambda when < 1', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaAlt = getTeamLambda(team, opponent, { altitudeMult: 0.97 });
+    expect(lambdaAlt).toBeCloseTo(lambdaBase * 0.97, 6);
+  });
+
+  it('h2hMult applies adjustment', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaH2h = getTeamLambda(team, opponent, { h2hMult: 1.05 });
+    expect(lambdaH2h).toBeCloseTo(lambdaBase * 1.05, 6);
+  });
+
+  it('squadValueMult applies adjustment', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaSquad = getTeamLambda(team, opponent, { squadValueMult: 1.03 });
+    expect(lambdaSquad).toBeCloseTo(lambdaBase * 1.03, 6);
+  });
+
+  it('all new factors compound multiplicatively', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaAll = getTeamLambda(team, opponent, {
+      fatigueMult: 0.95,
+      altitudeMult: 0.97,
+      h2hMult: 1.02,
+      squadValueMult: 1.03,
+    });
+    const lambdaBase = getTeamLambda(team, opponent);
+    const expected = lambdaBase * 0.95 * 0.97 * 1.02 * 1.03;
+    expect(lambdaAll).toBeCloseTo(expected, 6);
+  });
+
+  it('all new factors default to 1.0 (no change)', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaDefault = getTeamLambda(team, opponent);
+    const lambdaExplicit = getTeamLambda(team, opponent, {
+      fatigueMult: 1, altitudeMult: 1, h2hMult: 1, squadValueMult: 1,
+    });
+    expect(lambdaExplicit).toBeCloseTo(lambdaDefault, 6);
+  });
+});
