@@ -28,7 +28,7 @@ export function eloToLambdaDiff(eloDiff) {
  * Formula: baseline * exp(eloToLambdaDiff) * exp(attack) * exp(opponentDefence) * exp(homeAdvantage)
  * @param {{ elo: number }} team - Team object with Elo rating
  * @param {{ elo: number }} opponent - Opponent object with Elo rating
- * @param {{ homeAdvantage?: number, attack?: number, opponentDefence?: number }} [options] - Optional factors
+ * @param {{ homeAdvantage?: number, attack?: number, opponentDefence?: number, availabilityMult?: number }} [options] - Optional factors
  * @returns {number} Expected goals (lambda) for the team
  */
 export function getTeamLambda(team, opponent, options = {}) {
@@ -38,6 +38,7 @@ export function getTeamLambda(team, opponent, options = {}) {
   if (options.attack) lambda *= Math.exp(options.attack);
   if (options.opponentDefence) lambda *= Math.exp(options.opponentDefence);
   if (options.homeAdvantage) lambda *= Math.exp(options.homeAdvantage);
+  if (options.availabilityMult && options.availabilityMult !== 1) lambda *= options.availabilityMult;
   return lambda;
 }
 

@@ -79,6 +79,23 @@ describe('getTeamLambda', () => {
     // baseline * exp(0.2) * exp(0.3) = baseline * exp(0.5)
     expect(lambdaBoth).toBeCloseTo(BASELINE_LAMBDA * Math.exp(0.5), 6);
   });
+
+  it('availabilityMult reduces lambda when < 1', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaBase = getTeamLambda(team, opponent);
+    const lambdaSuspended = getTeamLambda(team, opponent, { availabilityMult: 0.92 });
+    expect(lambdaSuspended).toBeCloseTo(lambdaBase * 0.92, 6);
+    expect(lambdaSuspended).toBeLessThan(lambdaBase);
+  });
+
+  it('availabilityMult default is 1 (no change)', () => {
+    const team = { elo: 2000 };
+    const opponent = { elo: 2000 };
+    const lambdaExplicit = getTeamLambda(team, opponent, { availabilityMult: 1 });
+    const lambdaDefault = getTeamLambda(team, opponent);
+    expect(lambdaExplicit).toBeCloseTo(lambdaDefault, 6);
+  });
 });
 
 describe('timeDecayWeight', () => {

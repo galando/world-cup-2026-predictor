@@ -179,6 +179,7 @@ export default function PreMatchScreen() {
             lambdaAway={pred.lambdaAway}
             homeName={homeName}
             awayName={awayName}
+            market={pred.market}
           />
         </Card>
       )}

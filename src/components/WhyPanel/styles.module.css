@@ -59,3 +59,50 @@
   border-radius: 50%;
   flex-shrink: 0;
 }
+.marketMeta {
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+.methodology {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.methodTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.methodStep {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.stepNum {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.methodStep strong {
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+.methodStep p {
+  font-size: 0.72rem;
+  color: var(--ink-dim);
+  margin: 2px 0 0;
+  line-height: 1.45;
+}
