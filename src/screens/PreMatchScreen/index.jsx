@@ -120,11 +120,21 @@ export default function PreMatchScreen() {
     setFeedback({ home: h, away: a });
   };
 
-  const formatDate = (dateStr) => {
+  const formatDateTime = (dateStr, timeStr) => {
     if (!dateStr) return '';
     try {
-      const d = new Date(dateStr + 'T00:00:00');
       const locale = i18n.language === 'he' ? 'he-IL' : i18n.language === 'nl' ? 'nl-NL' : 'en-US';
+      if (timeStr) {
+        const d = new Date(`${dateStr}T${timeStr}:00Z`);
+        return d.toLocaleString(locale, {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+      const d = new Date(dateStr + 'T12:00:00Z');
       return d.toLocaleDateString(locale, {
         weekday: 'long',
         day: 'numeric',
@@ -153,7 +163,7 @@ export default function PreMatchScreen() {
         <StageChip stage={match.stage} />
         {match.date && (
           <span className={styles.dateText}>
-            {formatDate(match.date)}
+            {formatDateTime(match.date, match.time)}
             {match.venue ? ` · ${match.venue}` : ''}
           </span>
         )}
