@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "World Cup 2026",
-    "subtitle": "Where data meets the beautiful game"
+    "subtitle": "Smarter predictions, built on real football data."
   },
   "nav": {
     "back": "Back",
@@ -10,7 +10,7 @@
   },
   "home": {
     "title": "World Cup 2026",
-    "subtitle": "Where data meets the beautiful game",
+    "subtitle": "Smarter predictions, built on real football data.",
     "filterAll": "All",
     "filterMyTeam": "My Team",
     "filterGroup": "By Group",

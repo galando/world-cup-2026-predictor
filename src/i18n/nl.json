@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "WK 2026",
-    "subtitle": "Waar data het mooie spel ontmoet"
+    "subtitle": "Slimmere voorspellingen, gebouwd op echte voetbaldata."
   },
   "nav": {
     "back": "Terug",
@@ -10,7 +10,7 @@
   },
   "home": {
     "title": "WK 2026",
-    "subtitle": "Waar data het mooie spel ontmoet",
+    "subtitle": "Slimmere voorspellingen, gebouwd op echte voetbaldata.",
     "filterAll": "Alles",
     "filterMyTeam": "Mijn team",
     "filterGroup": "Per groep",
