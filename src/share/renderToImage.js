@@ -1,6 +1,29 @@
 import { toBlob } from 'html-to-image';
 
 /**
+ * Fetch a remote image URL as an inline data URL.
+ * Bypasses cross-origin restrictions for html-to-image rendering.
+ * Returns the original URL as fallback on failure.
+ *
+ * @param {string} url
+ * @returns {Promise<string>} data URL or original URL
+ */
+export async function fetchAsDataUrl(url) {
+  try {
+    const res = await fetch(url, { mode: 'cors' });
+    const blob = await res.blob();
+    return await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(/** @type {string} */ (reader.result));
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return url;
+  }
+}
+
+/**
  * Preload Rubik font so html-to-image can render it.
  * Resolves when the font is ready or after a 2s timeout.
  */

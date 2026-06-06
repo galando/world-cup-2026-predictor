@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import Flag from '../../components/Flag';
 import styles from './styles.module.css';
 
 /**
@@ -12,6 +11,7 @@ import styles from './styles.module.css';
  *   homeScore, awayScore - guessed scores (numbers)
  *   feedbackText - e.g. "The model gives this 11%"
  *   probs - { home, draw, away }
+ *   homeFlagSrc, awayFlagSrc - pre-fetched data URLs for flags (avoids CORS in html-to-image)
  */
 export default function ShareCardSquare({
   homeCode,
@@ -22,11 +22,16 @@ export default function ShareCardSquare({
   awayScore,
   feedbackText,
   probs,
+  homeFlagSrc,
+  awayFlagSrc,
 }) {
   const { t } = useTranslation();
   const homePct = probs ? Math.round(probs.home * 100) : 0;
   const awayPct = probs ? Math.round(probs.away * 100) : 0;
   const drawPct = probs ? Math.round(probs.draw * 100) : 0;
+
+  const homeImg = homeFlagSrc ?? `https://flagcdn.com/w80/${homeCode}.png`;
+  const awayImg = awayFlagSrc ?? `https://flagcdn.com/w80/${awayCode}.png`;
 
   return (
     <div className={styles.card}>
@@ -50,7 +55,13 @@ export default function ShareCardSquare({
         {/* Flags + Score */}
         <div className={styles.scoreRow}>
           <div className={styles.teamCol}>
-            <Flag code={homeCode} size={80} alt={homeName} />
+            <img
+              src={homeImg}
+              alt={homeName}
+              width={80}
+              height={80}
+              style={{ objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }}
+            />
             <div className={styles.teamName} data-share-text>{homeName}</div>
           </div>
           <div className={styles.scoreCenter}>
@@ -59,7 +70,13 @@ export default function ShareCardSquare({
             <span className={styles.scoreNum} data-share-text>{awayScore}</span>
           </div>
           <div className={styles.teamCol}>
-            <Flag code={awayCode} size={80} alt={awayName} />
+            <img
+              src={awayImg}
+              alt={awayName}
+              width={80}
+              height={80}
+              style={{ objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }}
+            />
             <div className={styles.teamName} data-share-text>{awayName}</div>
           </div>
         </div>
@@ -77,9 +94,6 @@ export default function ShareCardSquare({
             )}
           </div>
         )}
-
-        {/* URL */}
-        <div className={styles.url} data-share-text>{t('share.url')}</div>
       </div>
     </div>
   );
