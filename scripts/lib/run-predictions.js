@@ -73,8 +73,9 @@ function buildFactorChain(teamData, opponentData, isHome, match, suspensionMap, 
 
   const chain = [
     { key: 'base', label_he: 'בסיס', mult: BASELINE_LAMBDA },
-    { key: 'atk', label_he: 'כוח התקפה', mult: parseFloat(atkMult.toFixed(2)) },
-    { key: 'def', label_he: 'הגנת יריב', mult: parseFloat(defMult.toFixed(2)) },
+    { key: 'elo', label_he: 'דירוג אלו', mult: parseFloat(eloMult.toFixed(2)) },
+    { key: 'attack', label_he: 'כוח התקפה', mult: parseFloat(atkMult.toFixed(2)) },
+    { key: 'defence', label_he: 'הגנת יריב', mult: parseFloat(defMult.toFixed(2)) },
     { key: 'form', label_he: 'כושר אחרון', mult: parseFloat(formWeight.toFixed(2)) },
     { key: 'venue', label_he: 'יתרון מגרש', mult: parseFloat(venueMult.toFixed(2)) },
   ];
