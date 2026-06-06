@@ -71,16 +71,13 @@ export default function TeamPickerScreen() {
         <div className={styles.sectionTitle}>{t('settings.favTeamSection')}</div>
         <div className={styles.grid}>
           {teams.map(([code, meta]) => {
-            const hasTheme = !!meta.theme;
             const isSelected = teamCode === code;
 
             return (
               <button
                 key={code}
-                className={`${styles.teamItem} ${!hasTheme ? styles.disabled : ''} ${isSelected ? styles.selected : ''}`}
-                onClick={() => hasTheme && setTeam(code)}
-                disabled={!hasTheme}
-                title={!hasTheme ? t('settings.noThemeTooltip') : ''}
+                className={`${styles.teamItem} ${isSelected ? styles.selected : ''}`}
+                onClick={() => setTeam(code)}
               >
                 <div className={styles.teamFlagWrap}>
                   <Flag code={meta.flagIso} size={40} />
