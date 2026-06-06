@@ -40,6 +40,7 @@ export default function PreMatchScreen() {
 
   const [showDonut, setShowDonut] = useState(false);
   const [qualifyOpen, setQualifyOpen] = useState(false);
+  const [scoreMatrixOpen, setScoreMatrixOpen] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [shareVisible, setShareVisible] = useState(false);
   const [shareFlags, setShareFlags] = useState({ home: null, away: null });
@@ -245,11 +246,18 @@ export default function PreMatchScreen() {
       {/* ScorelineGrid */}
       {pred?.scoreMatrix && (
         <Card>
-          <div className={styles.sectionTitle}>{t('prediction.scoreMatrix')}</div>
-          <ScorelineGrid
-            matrix={pred.scoreMatrix}
-            onSelect={handleGridSelect}
-          />
+          <button className={styles.qualifyToggle} onClick={() => setScoreMatrixOpen(!scoreMatrixOpen)}>
+            <span>{t('prediction.scoreMatrix')}</span>
+            <Ico name={scoreMatrixOpen ? 'chevronUp' : 'chevronDown'} size={18} />
+          </button>
+          {scoreMatrixOpen && (
+            <div className={styles.qualifyBody}>
+              <ScorelineGrid
+                matrix={pred.scoreMatrix}
+                onSelect={handleGridSelect}
+              />
+            </div>
+          )}
         </Card>
       )}
 
