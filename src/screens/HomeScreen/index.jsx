@@ -8,7 +8,6 @@ import FilterBar from '../../components/FilterBar';
 import EmptyState from '../../components/EmptyState';
 import Skeleton from '../../components/Skeleton';
 import Ico from '../../components/Ico';
-import Card from '../../components/Card';
 import styles from './styles.module.css';
 
 export default function HomeScreen() {
@@ -104,14 +103,6 @@ export default function HomeScreen() {
         subFilter={subFilter}
         onSubFilter={setSubFilter}
       />
-
-      {/* Bracket banner */}
-      <Card
-        className={styles.banner}
-        onClick={() => navigate('/bracket')}
-      >
-        {t('home.bracketBanner')}
-      </Card>
 
       {/* Match list */}
       {isEmpty ? (

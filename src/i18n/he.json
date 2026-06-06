@@ -6,8 +6,7 @@
   "nav": {
     "back": "חזרה",
     "settings": "הגדרות",
-    "home": "ראשי",
-    "bracket": "בית הניחושים"
+    "home": "ראשי"
   },
   "home": {
     "title": "מונדיאל 2026",
@@ -16,7 +15,6 @@
     "filterMyTeam": "הנבחרת שלי",
     "filterGroup": "לפי בית",
     "filterStage": "לפי שלב",
-    "bracketBanner": "חזה את הטורניר כולו ←",
     "emptyFilter": "אין משחקים מתאימים",
     "teamEliminated": "הנבחרת שלך סיימה את הדרך",
     "lastUpdated": "עדכון אחרון"
@@ -110,16 +108,6 @@
     "favTeamSection": "נבחרת אהובה",
     "clearTeam": "נקה בחירה",
     "noThemeTooltip": "בקרוב"
-  },
-  "bracket": {
-    "title": "חיזוי הטורניר כולו",
-    "fillByModel": "השאר לפי המודל",
-    "shareBracket": "שתף את ה-Bracket שלי",
-    "myPicks": "בחירות שלי",
-    "modelPicks": "מהמודל",
-    "champion": "אלופה",
-    "progress": "שלבים מולאו",
-    "resetOverrides": "אפס הכל"
   },
   "share": {
     "brand": "MUNDIAL PREDICTOR",

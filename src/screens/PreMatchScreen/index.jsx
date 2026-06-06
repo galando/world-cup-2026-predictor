@@ -49,6 +49,26 @@ export default function PreMatchScreen() {
     return i18n.language === 'he' ? meta.nameHE : meta.nameEN;
   };
 
+  // Derive team names before early returns so useCallback stays stable.
+  // These are null-safe: nameOf handles undefined codes.
+  const homeName = match ? nameOf(match.homeTeam) : '';
+  const awayName = match ? nameOf(match.awayTeam) : '';
+
+  const handleShare = useCallback(async () => {
+    if (!guess || !pred) return;
+    setShareVisible(true);
+    // Wait for render, then capture
+    requestAnimationFrame(async () => {
+      try {
+        const blob = await renderToImage(shareRef, 320, 320);
+        await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`);
+      } catch (err) {
+        console.error('Share failed:', err);
+      }
+      setShareVisible(false);
+    });
+  }, [guess, pred, matchId, homeName, awayName]);
+
   if (matchesLoading) {
     return (
       <div className={styles.page}>
@@ -72,9 +92,6 @@ export default function PreMatchScreen() {
   const homeTeam = teams?.[match.homeTeam];
   const awayTeam = teams?.[match.awayTeam];
 
-  const homeName = nameOf(match.homeTeam);
-  const awayName = nameOf(match.awayTeam);
-
   const isKnockout = match.stage !== 'group';
   const isFinished = match.status === 'FINISHED';
 
@@ -87,21 +104,6 @@ export default function PreMatchScreen() {
     save(h, a);
     setFeedback({ home: h, away: a });
   };
-
-  const handleShare = useCallback(async () => {
-    if (!guess || !pred) return;
-    setShareVisible(true);
-    // Wait for render, then capture
-    requestAnimationFrame(async () => {
-      try {
-        const blob = await renderToImage(shareRef, 320, 320);
-        await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`);
-      } catch (err) {
-        console.error('Share failed:', err);
-      }
-      setShareVisible(false);
-    });
-  }, [guess, pred, matchId, homeName, awayName]);
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';

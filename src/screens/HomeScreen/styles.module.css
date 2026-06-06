@@ -60,18 +60,6 @@
   color: var(--ink-faint);
 }
 
-.banner {
-  cursor: pointer;
-  text-align: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--accent);
-  transition: background 0.15s;
-}
-.banner:active {
-  opacity: 0.85;
-}
-
 .list {
   display: flex;
   flex-direction: column;
