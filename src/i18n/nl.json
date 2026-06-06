@@ -1,0 +1,190 @@
+{
+  "app": {
+    "title": "WK 2026",
+    "subtitle": "Elk percentage komt uit een transparant model"
+  },
+  "nav": {
+    "back": "Terug",
+    "settings": "Instellingen",
+    "home": "Home"
+  },
+  "home": {
+    "title": "WK 2026",
+    "subtitle": "Elk percentage komt uit een transparant model",
+    "filterAll": "Alles",
+    "filterMyTeam": "Mijn team",
+    "filterGroup": "Per groep",
+    "filterStage": "Per fase",
+    "emptyFilter": "Geen wedstrijden gevonden",
+    "teamEliminated": "Jouw team is uitgeschakeld",
+    "lastUpdated": "Laatste update"
+  },
+  "match": {
+    "vs": "vs",
+    "date": "Datum",
+    "venue": "Stadion",
+    "time": "Tijd",
+    "stage": "Fase",
+    "finished": "Afgelopen",
+    "scheduled": "Gepland",
+    "live": "Live",
+    "groupLabel": "Groep"
+  },
+  "stage": {
+    "group": "Groepsfase",
+    "r32": "Ronde van 32",
+    "r16": "Achtste finale",
+    "qf": "Kwartfinale",
+    "sf": "Halve finale",
+    "final": "Finale",
+    "thirdPlace": "Derde-plaatswedstrijd"
+  },
+  "prediction": {
+    "title": "Modelvoorspelling",
+    "home": "Thuiswinst",
+    "draw": "Gelijkspel",
+    "away": "Uitwinst",
+    "expectedGoals": "Verwachte doelpunten",
+    "whyPanel": "Hoe kwamen we aan deze percentages?",
+    "topScores": "Waarschijnlijke scores",
+    "scoreMatrix": "Scorematrix",
+    "scoreMatrixLegend": "Waarschijnlijkheid % per uitslag",
+    "homeAxis": "Thuis ↓",
+    "awayAxis": "Uit →",
+    "includingPenalties": "Inclusief verlenging en strafschoppen",
+    "qualifyTitle": "Wie gaat door?"
+  },
+  "factor": {
+    "base": "Basis",
+    "elo": "Elo-rating",
+    "attack": "Aanvalskracht",
+    "defence": "Verdediging tegenstander",
+    "form": "Recente vorm",
+    "venue": "Thuisvoordeel",
+    "suspension": "Schorsing",
+    "market": "Marktsignaal",
+    "fatigue": "Reisvermoeidheid",
+    "altitude": "Hoogte",
+    "h2h": "Onderling",
+    "squadValue": "Selectiewaarde"
+  },
+  "market": {
+    "title": "Marktsignaal",
+    "blendWeight": "Marktgewicht",
+    "impliedProbs": "Impliciete kansen",
+    "bookmakers": "Bookmakers",
+    "modelOnly": "Alleen model"
+  },
+  "guess": {
+    "title": "Voorspel de score",
+    "submit": "Controleer mijn voorspelling",
+    "clear": "Wissen",
+    "feedback": "Kans op exacte uitslag: {{pct}}%",
+    "myGuess": "Mijn voorspelling",
+    "modelPredict": "Model voorspelt",
+    "saved": "Voorspelling opgeslagen"
+  },
+  "result": {
+    "title": "Einduitslag",
+    "correctWinner": "Je raadde de winnaar correct!",
+    "correctScore": "Je raadde de exacte score!",
+    "missed": "Niet dichtbij, maar het model had het fout, niet jij"
+  },
+  "team": {
+    "fifaRank": "FIFA-ranking",
+    "elo": "Sterkte (Elo)",
+    "form": "Vorm",
+    "avgGoals": "Gem. doelpunten",
+    "avgConceded": "Gem. tegendoelpunten",
+    "tournamentMatches": "Toernooiwedstrijden",
+    "headToHead": "Onderling"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "languageSection": "Interfacetaal",
+    "languageHe": "עברית",
+    "languageEn": "English",
+    "languageNl": "Nederlands",
+    "themeSection": "Kleurthema",
+    "themeDefault": "Veldgroen (standaard)",
+    "favTeamSection": "Favoriet team",
+    "clearTeam": "Selectie wissen",
+    "noThemeTooltip": "Binnenkort beschikbaar"
+  },
+  "share": {
+    "brand": "MUNDIAL PREDICTOR",
+    "myGuess": "Mijn voorspelling",
+    "url": "mundial-predictor.app"
+  },
+  "offline": {
+    "banner": "Offline modus — gegevens zijn mogelijk verouderd"
+  },
+  "install": {
+    "banner": "Toevoegen aan beginscherm",
+    "action": "Toevoegen",
+    "dismiss": "Niet nu"
+  },
+  "form": {
+    "win": "W",
+    "draw": "G",
+    "loss": "V"
+  },
+  "error": {
+    "loadFailed": "Gegevens laden mislukt",
+    "matchNotFound": "Wedstrijd niet gevonden",
+    "teamNotFound": "Team niet gevonden",
+    "retry": "Opnieuw proberen"
+  },
+  "loading": {
+    "text": "Laden..."
+  },
+  "calibration": {
+    "played": "Gespeelde wedstrijden",
+    "winnerHit": "Winnaar correct voorspeld",
+    "exactHit": "Exacte score voorspeld",
+    "brier": "Brier-score",
+    "title": "Modelnauwkeurigheid",
+    "logLoss": "Log Loss",
+    "hitRate": "Trefpercentage",
+    "calibrationCurve": "Kalibratiecurve",
+    "perMatch": "Per wedstrijd",
+    "modelOnly": "Alleen model",
+    "blended": "Gemengd"
+  },
+  "tournament": {
+    "title": "Toernooi-kansen",
+    "probR16": "R16 %",
+    "probQF": "KF %",
+    "probSF": "HF %",
+    "probFinal": "Finale %",
+    "probWin": "Winst %",
+    "simulations": "Simulaties",
+    "mostLikely": "Meest waarschijnlijke kampioen",
+    "team": "Team"
+  },
+  "scenario": {
+    "title": "Scenarioverkenner",
+    "reset": "Herstellen",
+    "override": "Uitslag aanpassen",
+    "whatIf": "Stel dat",
+    "homeWin": "Thuiswinst",
+    "draw": "Gelijkspel",
+    "awayWin": "Uitwinst",
+    "original": "Origineel",
+    "updated": "Bijgewerkt",
+    "selectMatch": "Selecteer een wedstrijd om aan te passen"
+  },
+  "methodology": {
+    "title": "Hoe voorspellingen worden berekend",
+    "step1Title": "Elo-ratings → Verwachte doelpunten (λ)",
+    "step1Desc": "Elo is een ratingsysteem — oorspronkelijk uitgevonden voor schaken — dat teamsterkte puur op basis van wedstrijduitslagen meet. Winnen van een sterker team levert meer punten op; verliezen van een zwakker team kost meer. In tegenstelling tot de FIFA-ranking, die een ander puntenstelsel hanteert en beïnvloed wordt door welke wedstrijden een team kiest te spelen, is Elo een consistente wiskundige weergave van directe prestaties over tijd. In dit model vertaalt een Elo-verschil van 400 punten zich naar ongeveer 0,8 extra verwachte doelpunten per wedstrijd. Een team met een hogere Elo dan de tegenstander begint met een scoringsvoordeel, ook als hun FIFA-ranking lager is.",
+    "step2Title": "Aanpassingen voor toernooiprestaties",
+    "step2Desc": "Zodra het toernooi begint, worden aanvalskracht, defensieve kwaliteit en recente vorm (W/G/V) meegenomen. Deze vermenigvuldigen de basis-λ — een goed scorend team krijgt een bonus, een team dat veel incasseert krijgt een straf.",
+    "step3Title": "Schorsinfactor",
+    "step3Desc": "Rode kaarten uit vorige wedstrijden resulteren in automatische schorsingen voor 1 wedstrijd. Een team met een geschorste speler krijgt een 0,92x vermenigvuldiger op hun verwachte doelpunten, wat de verminderde selectiesterkte weerspiegelt.",
+    "step4Title": "Poisson-raster → Wedstrijdkansen",
+    "step4Desc": "De λ-waarden van beide teams worden in een Dixon-Coles Poisson-model ingevoerd om een scorematrix te genereren. De kansen bij elkaar opgeteld geeft ons de kans op thuiswinst, gelijkspel of uitwinst (90 minuten).",
+    "step5Title": "Marktsignaalmix",
+    "step5Desc": "Indien beschikbaar worden weddenschapskansen van meerdere bookmakers omgezet naar impliciete kansen (na verwijdering van de bookmakersmarge). Deze worden gemengd met de modelkansen: 75% model + 25% markt. Dit verbetert de kalibratie door expert- en kwantitatieve consensus mee te nemen."
+  }
+}

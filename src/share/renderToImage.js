@@ -89,13 +89,18 @@ export async function renderToImage(ref, width, height) {
  * @param {Blob} blob - PNG blob to share
  * @param {string} filename - filename for download fallback
  * @param {string} title - share title
+ * @param {string} [shareUrl] - page URL to include in the share
  */
-export async function shareBlob(blob, filename = 'mundial-prediction.png', title = 'Mundial Predictor') {
+export async function shareBlob(blob, filename = 'mundial-prediction.png', title = 'Mundial Predictor', shareUrl = '') {
   const file = new File([blob], filename, { type: 'image/png' });
 
-  if (navigator.canShare?.({ files: [file] })) {
+  // Build share payload — include URL when provided
+  const shareData = { files: [file], title };
+  if (shareUrl) shareData.url = shareUrl;
+
+  if (navigator.canShare?.(shareData)) {
     try {
-      await navigator.share({ files: [file], title });
+      await navigator.share(shareData);
       return;
     } catch (err) {
       if (err.name === 'AbortError') return; // user cancelled
@@ -103,13 +108,13 @@ export async function shareBlob(blob, filename = 'mundial-prediction.png', title
     }
   }
 
-  // Desktop fallback: trigger download
-  const url = URL.createObjectURL(blob);
+  // Desktop fallback: download the image
+  const objUrl = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
+  a.href = objUrl;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  setTimeout(() => URL.revokeObjectURL(objUrl), 5000);
 }
