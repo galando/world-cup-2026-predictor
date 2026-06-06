@@ -239,6 +239,12 @@ function mergeResults(matches, results) {
       const homeMatch = match.homeTeam === result.homeTeam;
       const awayMatch = match.awayTeam === result.awayTeam;
       if (homeMatch && awayMatch) {
+        // Extract UTC kickoff time from the full ISO date (available for all matches)
+        if (result.date) {
+          const utc = new Date(result.date);
+          match.date = utc.toISOString().split('T')[0];
+          match.time = `${String(utc.getUTCHours()).padStart(2, '0')}:${String(utc.getUTCMinutes()).padStart(2, '0')}`;
+        }
         if (result.status === 'FINISHED' && result.homeScore != null) {
           match.score = { home: result.homeScore, away: result.awayScore };
           match.status = 'FINISHED';
