@@ -61,7 +61,7 @@ export default function PreMatchScreen() {
     requestAnimationFrame(async () => {
       try {
         const blob = await renderToImage(shareRef, 320, 320);
-        await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`);
+        await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`, window.location.href);
       } catch (err) {
         console.error('Share failed:', err);
       }
@@ -109,7 +109,8 @@ export default function PreMatchScreen() {
     if (!dateStr) return '';
     try {
       const d = new Date(dateStr + 'T00:00:00');
-      return d.toLocaleDateString(i18n.language === 'he' ? 'he-IL' : 'en-US', {
+      const locale = i18n.language === 'he' ? 'he-IL' : i18n.language === 'nl' ? 'nl-NL' : 'en-US';
+      return d.toLocaleDateString(locale, {
         weekday: 'long',
         day: 'numeric',
         month: 'short',

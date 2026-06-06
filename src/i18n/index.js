@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import he from './he.json';
 import en from './en.json';
+import nl from './nl.json';
 
 const savedLang = (() => {
   try {
@@ -19,6 +20,7 @@ i18next
     resources: {
       he: { translation: he },
       en: { translation: en },
+      nl: { translation: nl },
     },
     interpolation: { escapeValue: false },
   });

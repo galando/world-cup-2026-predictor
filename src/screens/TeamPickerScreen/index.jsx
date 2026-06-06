@@ -45,6 +45,12 @@ export default function TeamPickerScreen() {
           >
             {t('settings.languageEn')}
           </button>
+          <button
+            className={`${styles.langBtn} ${lang === 'nl' ? styles.langActive : ''}`}
+            onClick={() => setLang('nl')}
+          >
+            {t('settings.languageNl')}
+          </button>
         </div>
       </Card>
 
