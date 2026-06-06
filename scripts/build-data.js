@@ -234,11 +234,11 @@ async function main() {
  */
 function mergeResults(matches, results) {
   for (const match of matches) {
-    // Try to find matching result by team codes
+    // Try to find matching result by team codes (either home/away ordering)
     for (const [key, result] of results.entries()) {
-      const homeMatch = match.homeTeam === result.homeTeam;
-      const awayMatch = match.awayTeam === result.awayTeam;
-      if (homeMatch && awayMatch) {
+      const direct = match.homeTeam === result.homeTeam && match.awayTeam === result.awayTeam;
+      const swapped = match.homeTeam === result.awayTeam && match.awayTeam === result.homeTeam;
+      if (direct || swapped) {
         // Extract UTC kickoff time from the full ISO date (available for all matches)
         if (result.date) {
           const utc = new Date(result.date);
