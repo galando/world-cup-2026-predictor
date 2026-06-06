@@ -121,6 +121,7 @@
   },
   "install": {
     "banner": "Toevoegen aan beginscherm",
+    "action": "Toevoegen",
     "dismiss": "Niet nu"
   },
   "form": {
