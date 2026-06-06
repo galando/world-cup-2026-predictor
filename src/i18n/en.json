@@ -175,7 +175,7 @@
   "methodology": {
     "title": "How predictions are calculated",
     "step1Title": "Elo Ratings → Expected Goals (λ)",
-    "step1Desc": "Each team has an Elo rating from eloratings.net. The rating difference between two teams is converted into an expected goals value (λ) using a Poisson model. A higher Elo difference means a stronger team is expected to score more.",
+    "step1Desc": "Elo is a rating system — originally invented for chess — that measures team strength purely from match results. Beating a stronger team earns more points; losing to a weaker team costs more. Unlike FIFA ranking, which uses a separate formula and is influenced by which matches a team chooses to play, Elo is a consistent mathematical record of head-to-head performance over time. In this model, a 400-point Elo gap translates to roughly 0.8 extra expected goals per game. A team with a higher Elo than their opponent starts with a scoring advantage, even if their FIFA rank is lower.",
     "step2Title": "Tournament Performance Adjustments",
     "step2Desc": "Once the tournament starts, attack strength, defence quality, and recent form (W/D/L) are factored in. These multiply the base λ — a team scoring well gets a boost, a team conceding heavily gets a penalty.",
     "step3Title": "Suspension Factor",
