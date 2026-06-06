@@ -39,6 +39,7 @@ export default function PreMatchScreen() {
   const { guess, save } = useGuess(matchId);
 
   const [showDonut, setShowDonut] = useState(false);
+  const [qualifyOpen, setQualifyOpen] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [shareVisible, setShareVisible] = useState(false);
   const [shareFlags, setShareFlags] = useState({ home: null, away: null });
@@ -203,34 +204,41 @@ export default function PreMatchScreen() {
       {/* QualifyBlock for knockout */}
       {isKnockout && pred?.qualify && (
         <Card>
-          <div className={styles.qualifyTitle}>{t('prediction.qualifyTitle')}</div>
-          <div className={styles.qualifyBars}>
-            <div className={styles.qualifyRow}>
-              <div className={styles.qualifyTrack}>
-                <div
-                  className={styles.qualifyFill}
-                  style={{ width: `${Math.round(pred.qualify.home * 100)}%` }}
-                />
+          <button className={styles.qualifyToggle} onClick={() => setQualifyOpen(!qualifyOpen)}>
+            <span>{t('prediction.qualifyTitle')}</span>
+            <Ico name={qualifyOpen ? 'chevronUp' : 'chevronDown'} size={18} />
+          </button>
+          {qualifyOpen && (
+            <div className={styles.qualifyBody}>
+              <div className={styles.qualifyBars}>
+                <div className={styles.qualifyRow}>
+                  <div className={styles.qualifyTrack}>
+                    <div
+                      className={styles.qualifyFill}
+                      style={{ width: `${Math.round(pred.qualify.home * 100)}%` }}
+                    />
+                  </div>
+                  <span className={styles.qualifyPct}>
+                    {Math.round(pred.qualify.home * 100)}%
+                  </span>
+                  <span className={styles.qualifyLabel}>{homeName}</span>
+                </div>
+                <div className={styles.qualifyRow}>
+                  <div className={styles.qualifyTrack}>
+                    <div
+                      className={styles.qualifyFillLoss}
+                      style={{ width: `${Math.round(pred.qualify.away * 100)}%` }}
+                    />
+                  </div>
+                  <span className={styles.qualifyPct}>
+                    {Math.round(pred.qualify.away * 100)}%
+                  </span>
+                  <span className={styles.qualifyLabel}>{awayName}</span>
+                </div>
               </div>
-              <span className={styles.qualifyPct}>
-                {Math.round(pred.qualify.home * 100)}%
-              </span>
-              <span className={styles.qualifyLabel}>{homeName}</span>
+              <div className={styles.qualifyNote}>{t('prediction.includingPenalties')}</div>
             </div>
-            <div className={styles.qualifyRow}>
-              <div className={styles.qualifyTrack}>
-                <div
-                  className={styles.qualifyFillLoss}
-                  style={{ width: `${Math.round(pred.qualify.away * 100)}%` }}
-                />
-              </div>
-              <span className={styles.qualifyPct}>
-                {Math.round(pred.qualify.away * 100)}%
-              </span>
-              <span className={styles.qualifyLabel}>{awayName}</span>
-            </div>
-          </div>
-          <div className={styles.qualifyNote}>{t('prediction.includingPenalties')}</div>
+          )}
         </Card>
       )}
 
