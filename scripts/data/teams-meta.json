@@ -20,21 +20,48 @@
     "nameHE": "דרום אפריקה",
     "nameEN": "South Africa",
     "fifaRank": 37,
-    "group": "A"
+    "group": "A",
+    "theme": {
+      "field": "#1a2a0a",
+      "field2": "#0d1a06",
+      "card": "#213514",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ffb612",
+      "accent-ink": "#0d1a06",
+      "glow": "rgba(255,182,18,0.4)"
+    }
   },
   "KOR": {
     "flagIso": "kr",
     "nameHE": "דרום קוריאה",
     "nameEN": "South Korea",
     "fifaRank": 20,
-    "group": "A"
+    "group": "A",
+    "theme": {
+      "field": "#1a0810",
+      "field2": "#0d040a",
+      "card": "#240c18",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#c60c30",
+      "accent-ink": "#1a0810",
+      "glow": "rgba(198,12,48,0.4)"
+    }
   },
   "CZE": {
     "flagIso": "cz",
     "nameHE": "צ'כיה",
     "nameEN": "Czech Republic",
     "fifaRank": 25,
-    "group": "A"
+    "group": "A",
+    "theme": {
+      "field": "#0a1228",
+      "field2": "#060b18",
+      "card": "#121a38",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#d7141a",
+      "accent-ink": "#0a1228",
+      "glow": "rgba(215,20,26,0.4)"
+    }
   },
   "CAN": {
     "flagIso": "ca",
@@ -57,21 +84,48 @@
     "nameHE": "בוסניה והרצגובינה",
     "nameEN": "Bosnia and Herzegovina",
     "fifaRank": 36,
-    "group": "B"
+    "group": "B",
+    "theme": {
+      "field": "#0a1428",
+      "field2": "#060d18",
+      "card": "#121c38",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#fcd116",
+      "accent-ink": "#0a1428",
+      "glow": "rgba(252,209,22,0.4)"
+    }
   },
   "QAT": {
     "flagIso": "qa",
     "nameHE": "קטאר",
     "nameEN": "Qatar",
     "fifaRank": 40,
-    "group": "B"
+    "group": "B",
+    "theme": {
+      "field": "#3d0a1a",
+      "field2": "#280610",
+      "card": "#4d0e22",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#3d0a1a",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "SUI": {
     "flagIso": "ch",
     "nameHE": "שווייץ",
     "nameEN": "Switzerland",
     "fifaRank": 16,
-    "group": "B"
+    "group": "B",
+    "theme": {
+      "field": "#500a0a",
+      "field2": "#380606",
+      "card": "#641010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ffffff",
+      "accent-ink": "#500a0a",
+      "glow": "rgba(255,255,255,0.3)"
+    }
   },
   "BRA": {
     "flagIso": "br",
@@ -94,21 +148,48 @@
     "nameHE": "מרוקו",
     "nameEN": "Morocco",
     "fifaRank": 11,
-    "group": "C"
+    "group": "C",
+    "theme": {
+      "field": "#3d0a10",
+      "field2": "#28060a",
+      "card": "#4d0e16",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#c8102e",
+      "accent-ink": "#3d0a10",
+      "glow": "rgba(200,16,46,0.4)"
+    }
   },
   "HAI": {
     "flagIso": "ht",
     "nameHE": "האיטי",
     "nameEN": "Haiti",
     "fifaRank": 48,
-    "group": "C"
+    "group": "C",
+    "theme": {
+      "field": "#0a1050",
+      "field2": "#060a38",
+      "card": "#121864",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#c41e3a",
+      "accent-ink": "#0a1050",
+      "glow": "rgba(196,30,58,0.4)"
+    }
   },
   "SCO": {
     "flagIso": "gb-sct",
     "nameHE": "סקוטלנד",
     "nameEN": "Scotland",
     "fifaRank": 29,
-    "group": "C"
+    "group": "C",
+    "theme": {
+      "field": "#00154d",
+      "field2": "#000e33",
+      "card": "#001e66",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#e0e0e0",
+      "accent-ink": "#00154d",
+      "glow": "rgba(224,224,224,0.3)"
+    }
   },
   "USA": {
     "flagIso": "us",
@@ -131,21 +212,48 @@
     "nameHE": "פרגוואי",
     "nameEN": "Paraguay",
     "fifaRank": 32,
-    "group": "D"
+    "group": "D",
+    "theme": {
+      "field": "#500a0a",
+      "field2": "#380606",
+      "card": "#641010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#500a0a",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "AUS": {
     "flagIso": "au",
     "nameHE": "אוסטרליה",
     "nameEN": "Australia",
     "fifaRank": 24,
-    "group": "D"
+    "group": "D",
+    "theme": {
+      "field": "#001a50",
+      "field2": "#001038",
+      "card": "#002266",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ffcd00",
+      "accent-ink": "#001a50",
+      "glow": "rgba(255,205,0,0.4)"
+    }
   },
   "TUR": {
     "flagIso": "tr",
     "nameHE": "טורקיה",
     "nameEN": "Turkey",
     "fifaRank": 23,
-    "group": "D"
+    "group": "D",
+    "theme": {
+      "field": "#500a0a",
+      "field2": "#380606",
+      "card": "#641010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#500a0a",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "GER": {
     "flagIso": "de",
@@ -168,21 +276,48 @@
     "nameHE": "קוראסאו",
     "nameEN": "Curacao",
     "fifaRank": 47,
-    "group": "E"
+    "group": "E",
+    "theme": {
+      "field": "#001a50",
+      "field2": "#001038",
+      "card": "#002266",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f9e814",
+      "accent-ink": "#001a50",
+      "glow": "rgba(249,232,20,0.4)"
+    }
   },
   "CIV": {
     "flagIso": "ci",
     "nameHE": "חוף השנהב",
     "nameEN": "Ivory Coast",
     "fifaRank": 35,
-    "group": "E"
+    "group": "E",
+    "theme": {
+      "field": "#1a2a0a",
+      "field2": "#0d1a06",
+      "card": "#213514",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ff8000",
+      "accent-ink": "#1a2a0a",
+      "glow": "rgba(255,128,0,0.4)"
+    }
   },
   "ECU": {
     "flagIso": "ec",
     "nameHE": "אקוודור",
     "nameEN": "Ecuador",
     "fifaRank": 21,
-    "group": "E"
+    "group": "E",
+    "theme": {
+      "field": "#0a1428",
+      "field2": "#060d18",
+      "card": "#121c38",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ffd100",
+      "accent-ink": "#0a1428",
+      "glow": "rgba(255,209,0,0.4)"
+    }
   },
   "NED": {
     "flagIso": "nl",
@@ -205,21 +340,48 @@
     "nameHE": "יפן",
     "nameEN": "Japan",
     "fifaRank": 17,
-    "group": "F"
+    "group": "F",
+    "theme": {
+      "field": "#1a0a0a",
+      "field2": "#0d0606",
+      "card": "#241010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#bc002d",
+      "accent-ink": "#1a0a0a",
+      "glow": "rgba(188,0,45,0.4)"
+    }
   },
   "SWE": {
     "flagIso": "se",
     "nameHE": "שבדיה",
     "nameEN": "Sweden",
     "fifaRank": 26,
-    "group": "F"
+    "group": "F",
+    "theme": {
+      "field": "#002060",
+      "field2": "#001540",
+      "card": "#002a7a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#fecc02",
+      "accent-ink": "#002060",
+      "glow": "rgba(254,204,2,0.4)"
+    }
   },
   "TUN": {
     "flagIso": "tn",
     "nameHE": "תוניסיה",
     "nameEN": "Tunisia",
     "fifaRank": 33,
-    "group": "F"
+    "group": "F",
+    "theme": {
+      "field": "#500a0a",
+      "field2": "#380606",
+      "card": "#641010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#e0e0e0",
+      "accent-ink": "#500a0a",
+      "glow": "rgba(224,224,224,0.3)"
+    }
   },
   "BEL": {
     "flagIso": "be",
@@ -242,21 +404,48 @@
     "nameHE": "מצרים",
     "nameEN": "Egypt",
     "fifaRank": 34,
-    "group": "G"
+    "group": "G",
+    "theme": {
+      "field": "#1a1a1a",
+      "field2": "#0d0d0d",
+      "card": "#242424",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ce1126",
+      "accent-ink": "#1a1a1a",
+      "glow": "rgba(206,17,38,0.4)"
+    }
   },
   "IRN": {
     "flagIso": "ir",
     "nameHE": "איראן",
     "nameEN": "Iran",
     "fifaRank": 19,
-    "group": "G"
+    "group": "G",
+    "theme": {
+      "field": "#0d2a14",
+      "field2": "#071a0c",
+      "card": "#14361a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#da0000",
+      "accent-ink": "#0d2a14",
+      "glow": "rgba(218,0,0,0.4)"
+    }
   },
   "NZL": {
     "flagIso": "nz",
     "nameHE": "ניו זילנד",
     "nameEN": "New Zealand",
     "fifaRank": 39,
-    "group": "G"
+    "group": "G",
+    "theme": {
+      "field": "#001a50",
+      "field2": "#001038",
+      "card": "#002266",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#cc142b",
+      "accent-ink": "#001a50",
+      "glow": "rgba(204,20,43,0.4)"
+    }
   },
   "ESP": {
     "flagIso": "es",
@@ -279,21 +468,48 @@
     "nameHE": "כף ורדה",
     "nameEN": "Cape Verde",
     "fifaRank": 44,
-    "group": "H"
+    "group": "H",
+    "theme": {
+      "field": "#00205b",
+      "field2": "#00153d",
+      "card": "#002872",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#cf2027",
+      "accent-ink": "#00205b",
+      "glow": "rgba(207,32,39,0.4)"
+    }
   },
   "KSA": {
     "flagIso": "sa",
     "nameHE": "ערב הסעודית",
     "nameEN": "Saudi Arabia",
     "fifaRank": 42,
-    "group": "H"
+    "group": "H",
+    "theme": {
+      "field": "#0a2e14",
+      "field2": "#061e0c",
+      "card": "#103a1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#0a2e14",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "URU": {
     "flagIso": "uy",
     "nameHE": "אורוגוואי",
     "nameEN": "Uruguay",
     "fifaRank": 15,
-    "group": "H"
+    "group": "H",
+    "theme": {
+      "field": "#002060",
+      "field2": "#001540",
+      "card": "#002a7a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ffd700",
+      "accent-ink": "#002060",
+      "glow": "rgba(255,215,0,0.4)"
+    }
   },
   "FRA": {
     "flagIso": "fr",
@@ -316,21 +532,48 @@
     "nameHE": "סנגל",
     "nameEN": "Senegal",
     "fifaRank": 18,
-    "group": "I"
+    "group": "I",
+    "theme": {
+      "field": "#0a2e14",
+      "field2": "#061e0c",
+      "card": "#103a1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#fdef42",
+      "accent-ink": "#0a2e14",
+      "glow": "rgba(253,239,66,0.4)"
+    }
   },
   "IRQ": {
     "flagIso": "iq",
     "nameHE": "עיראק",
     "nameEN": "Iraq",
     "fifaRank": 38,
-    "group": "I"
+    "group": "I",
+    "theme": {
+      "field": "#1a1a1a",
+      "field2": "#0d0d0d",
+      "card": "#242424",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ce1126",
+      "accent-ink": "#1a1a1a",
+      "glow": "rgba(206,17,38,0.4)"
+    }
   },
   "NOR": {
     "flagIso": "no",
     "nameHE": "נורווגיה",
     "nameEN": "Norway",
     "fifaRank": 28,
-    "group": "I"
+    "group": "I",
+    "theme": {
+      "field": "#500a14",
+      "field2": "#38060c",
+      "card": "#640e1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#e0e0e0",
+      "accent-ink": "#500a14",
+      "glow": "rgba(224,224,224,0.3)"
+    }
   },
   "ARG": {
     "flagIso": "ar",
@@ -353,21 +596,48 @@
     "nameHE": "אלג'יריה",
     "nameEN": "Algeria",
     "fifaRank": 31,
-    "group": "J"
+    "group": "J",
+    "theme": {
+      "field": "#0a2e14",
+      "field2": "#061e0c",
+      "card": "#103a1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#0a2e14",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "AUT": {
     "flagIso": "at",
     "nameHE": "אוסטריה",
     "nameEN": "Austria",
     "fifaRank": 22,
-    "group": "J"
+    "group": "J",
+    "theme": {
+      "field": "#500a0a",
+      "field2": "#380606",
+      "card": "#641010",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f0f0f0",
+      "accent-ink": "#500a0a",
+      "glow": "rgba(240,240,240,0.3)"
+    }
   },
   "JOR": {
     "flagIso": "jo",
     "nameHE": "ירדן",
     "nameEN": "Jordan",
     "fifaRank": 43,
-    "group": "J"
+    "group": "J",
+    "theme": {
+      "field": "#0a2e14",
+      "field2": "#061e0c",
+      "card": "#103a1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#ce1126",
+      "accent-ink": "#0a2e14",
+      "glow": "rgba(206,17,38,0.4)"
+    }
   },
   "POR": {
     "flagIso": "pt",
@@ -390,21 +660,48 @@
     "nameHE": "קונגו דמוקרטית",
     "nameEN": "DR Congo",
     "fifaRank": 46,
-    "group": "K"
+    "group": "K",
+    "theme": {
+      "field": "#00205b",
+      "field2": "#00153d",
+      "card": "#002872",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#f7d618",
+      "accent-ink": "#00205b",
+      "glow": "rgba(247,214,24,0.4)"
+    }
   },
   "UZB": {
     "flagIso": "uz",
     "nameHE": "אוזבקיסטן",
     "nameEN": "Uzbekistan",
     "fifaRank": 41,
-    "group": "K"
+    "group": "K",
+    "theme": {
+      "field": "#0a2a3e",
+      "field2": "#061a28",
+      "card": "#10364e",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#1eb53a",
+      "accent-ink": "#0a2a3e",
+      "glow": "rgba(30,181,58,0.4)"
+    }
   },
   "COL": {
     "flagIso": "co",
     "nameHE": "קולומביה",
     "nameEN": "Colombia",
     "fifaRank": 12,
-    "group": "K"
+    "group": "K",
+    "theme": {
+      "field": "#002060",
+      "field2": "#001540",
+      "card": "#002a7a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#fcd116",
+      "accent-ink": "#002060",
+      "glow": "rgba(252,209,22,0.4)"
+    }
   },
   "ENG": {
     "flagIso": "gb-eng",
@@ -427,20 +724,47 @@
     "nameHE": "קרואטיה",
     "nameEN": "Croatia",
     "fifaRank": 10,
-    "group": "L"
+    "group": "L",
+    "theme": {
+      "field": "#1a0810",
+      "field2": "#0d040a",
+      "card": "#240c18",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#e31837",
+      "accent-ink": "#1a0810",
+      "glow": "rgba(227,24,55,0.4)"
+    }
   },
   "GHA": {
     "flagIso": "gh",
     "nameHE": "גאנה",
     "nameEN": "Ghana",
     "fifaRank": 45,
-    "group": "L"
+    "group": "L",
+    "theme": {
+      "field": "#0a2e14",
+      "field2": "#061e0c",
+      "card": "#103a1a",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#fcd116",
+      "accent-ink": "#0a2e14",
+      "glow": "rgba(252,209,22,0.4)"
+    }
   },
   "PAN": {
     "flagIso": "pa",
     "nameHE": "פנמה",
     "nameEN": "Panama",
     "fifaRank": 30,
-    "group": "L"
+    "group": "L",
+    "theme": {
+      "field": "#001a50",
+      "field2": "#001038",
+      "card": "#002266",
+      "line": "rgba(255,255,255,0.05)",
+      "accent": "#da121a",
+      "accent-ink": "#001a50",
+      "glow": "rgba(218,18,26,0.4)"
+    }
   }
 }

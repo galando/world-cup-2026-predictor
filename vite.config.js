@@ -9,8 +9,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Mundial 2026 Predictor',
-        short_name: 'Mundial',
+        name: 'World Cup Predictor',
+        short_name: 'WC Predictor',
         description: 'Transparent World Cup 2026 predictions with Dixon-Coles model',
         theme_color: '#0d1f14',
         background_color: '#0d1f14',

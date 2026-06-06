@@ -112,9 +112,9 @@
     "noThemeTooltip": "Coming soon"
   },
   "share": {
-    "brand": "MUNDIAL PREDICTOR",
+    "brand": "WORLD CUP PREDICTOR",
     "myGuess": "My Guess",
-    "url": "mundial-predictor.app"
+    "url": "world-cup-predictor.app"
   },
   "offline": {
     "banner": "Offline mode — data may not be up to date"
