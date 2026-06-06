@@ -77,7 +77,7 @@ export default function TeamPickerScreen() {
               <button
                 key={code}
                 className={`${styles.teamItem} ${isSelected ? styles.selected : ''}`}
-                onClick={() => setTeam(code)}
+                onClick={() => setTeam(isSelected ? null : code)}
               >
                 <div className={styles.teamFlagWrap}>
                   <Flag code={meta.flagIso} size={40} />

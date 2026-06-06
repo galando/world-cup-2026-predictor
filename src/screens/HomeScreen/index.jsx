@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useData } from '../../hooks/useData';
@@ -23,6 +23,8 @@ export default function HomeScreen() {
   const [filter, setFilter] = useState('all');
   const [subFilter, setSubFilter] = useState(null);
 
+  const firstUpcomingRef = useRef(null);
+
   const filteredMatches = useMemo(() => {
     if (!matches) return [];
 
@@ -42,23 +44,37 @@ export default function HomeScreen() {
       list = list.filter(m => m.stage === subFilter);
     }
 
+    // Upcoming games first (sorted ascending), then finished (most recent first)
     list.sort((a, b) => {
+      const aUpcoming = a.status !== 'FINISHED';
+      const bUpcoming = b.status !== 'FINISHED';
+      if (aUpcoming !== bUpcoming) return aUpcoming ? -1 : 1;
       if (!a.date) return 1;
       if (!b.date) return -1;
-      return a.date.localeCompare(b.date);
+      const cmp = a.date.localeCompare(b.date);
+      return aUpcoming ? cmp : -cmp;
     });
 
-    // Preferred team cards float to top
+    // Preferred upcoming matches float to top of upcoming section
     if (teamCode && filter !== 'myTeam') {
       list.sort((a, b) => {
-        const aPref = a.homeTeam === teamCode || a.awayTeam === teamCode ? 0 : 1;
-        const bPref = b.homeTeam === teamCode || b.awayTeam === teamCode ? 0 : 1;
-        return aPref - bPref;
+        const aPref = (a.homeTeam === teamCode || a.awayTeam === teamCode) && a.status !== 'FINISHED';
+        const bPref = (b.homeTeam === teamCode || b.awayTeam === teamCode) && b.status !== 'FINISHED';
+        if (aPref === bPref) return 0;
+        return aPref ? -1 : 1;
       });
     }
 
     return list;
   }, [matches, filter, subFilter, teamCode]);
+
+  const firstUpcomingIndex = filteredMatches.findIndex(m => m.status !== 'FINISHED');
+
+  useEffect(() => {
+    if (firstUpcomingRef.current) {
+      firstUpcomingRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [filter, subFilter]);
 
   if (matchesLoading) {
     return (
@@ -109,9 +125,10 @@ export default function HomeScreen() {
         <EmptyState message={emptyMsg} />
       ) : (
         <div className={styles.list}>
-          {filteredMatches.map(m => (
+          {filteredMatches.map((m, i) => (
             <MatchCard
               key={m.matchId}
+              ref={i === firstUpcomingIndex ? firstUpcomingRef : null}
               match={m}
               teamsMeta={teamsMeta}
               prediction={predictions?.find(p => p.matchId === m.matchId)}
