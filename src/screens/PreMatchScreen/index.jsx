@@ -18,7 +18,7 @@ import FeedbackCard from '../../components/FeedbackCard';
 import ResultCard from '../../components/ResultCard';
 import Skeleton from '../../components/Skeleton';
 import ShareCardSquare from '../../share/ShareCardSquare';
-import { renderToImage, shareBlob } from '../../share/renderToImage';
+import { renderToImage, shareBlob, fetchAsDataUrl } from '../../share/renderToImage';
 import styles from './styles.module.css';
 
 export default function PreMatchScreen() {
@@ -41,6 +41,7 @@ export default function PreMatchScreen() {
   const [showDonut, setShowDonut] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [shareVisible, setShareVisible] = useState(false);
+  const [shareFlags, setShareFlags] = useState({ home: null, away: null });
   const shareRef = useRef(null);
 
   const nameOf = (code) => {
@@ -49,25 +50,37 @@ export default function PreMatchScreen() {
     return i18n.language === 'he' ? meta.nameHE : meta.nameEN;
   };
 
-  // Derive team names before early returns so useCallback stays stable.
+  // Derive team names and codes before early returns so useCallback stays stable.
   // These are null-safe: nameOf handles undefined codes.
-  const homeName = match ? nameOf(match.homeTeam) : '';
-  const awayName = match ? nameOf(match.awayTeam) : '';
+  const homeTeamCode = match?.homeTeam ?? '';
+  const awayTeamCode = match?.awayTeam ?? '';
+  const homeName = match ? nameOf(homeTeamCode) : '';
+  const awayName = match ? nameOf(awayTeamCode) : '';
 
   const handleShare = useCallback(async () => {
     if (!guess || !pred) return;
+
+    // Pre-fetch flag images as data URLs so html-to-image never makes cross-origin requests
+    const [homeFlagSrc, awayFlagSrc] = await Promise.all([
+      fetchAsDataUrl(`https://flagcdn.com/w80/${homeTeamCode}.png`),
+      fetchAsDataUrl(`https://flagcdn.com/w80/${awayTeamCode}.png`),
+    ]);
+
+    setShareFlags({ home: homeFlagSrc, away: awayFlagSrc });
     setShareVisible(true);
-    // Wait for render, then capture
-    requestAnimationFrame(async () => {
-      try {
-        const blob = await renderToImage(shareRef, 320, 320);
-        await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`, window.location.href);
-      } catch (err) {
-        console.error('Share failed:', err);
-      }
-      setShareVisible(false);
-    });
-  }, [guess, pred, matchId, homeName, awayName]);
+
+    // Two frames: first to commit the state update, second to paint
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    try {
+      const blob = await renderToImage(shareRef, 320, 320);
+      await shareBlob(blob, `mundial-${matchId}.png`, `${homeName} vs ${awayName}`, window.location.href);
+    } catch (err) {
+      console.error('Share failed:', err);
+    }
+    setShareVisible(false);
+    setShareFlags({ home: null, away: null });
+  }, [guess, pred, matchId, homeName, awayName, homeTeamCode, awayTeamCode]);
 
   if (matchesLoading) {
     return (
@@ -280,6 +293,8 @@ export default function PreMatchScreen() {
               awayName={awayName}
               homeScore={guess.home}
               awayScore={guess.away}
+              homeFlagSrc={shareFlags.home}
+              awayFlagSrc={shareFlags.away}
               feedbackText={
                 (() => {
                   const ts = pred?.topScores?.find(s => s.h === guess.home && s.a === guess.away);
