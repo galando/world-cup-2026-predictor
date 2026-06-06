@@ -84,10 +84,18 @@
 }
 
 /* Qualify block */
-.qualifyTitle {
-  font-weight: 700;
-  font-size: 0.95rem;
-  margin-bottom: 12px;
+.qualifyToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px 0;
+  color: var(--ink-dim);
+  font-size: 0.85rem;
+  gap: 8px;
+}
+.qualifyBody {
+  margin-top: 12px;
 }
 .qualifyBars {
   display: flex;
