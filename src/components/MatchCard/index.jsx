@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Flag from '../Flag';
@@ -6,7 +7,7 @@ import MiniLean from '../MiniLean';
 import Ico from '../Ico';
 import styles from './styles.module.css';
 
-export default function MatchCard({ match, teamsMeta, prediction, isPreferred }) {
+const MatchCard = forwardRef(function MatchCard({ match, teamsMeta, prediction, isPreferred }, ref) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
 
@@ -20,11 +21,21 @@ export default function MatchCard({ match, teamsMeta, prediction, isPreferred })
 
   const isFinished = match.status === 'FINISHED';
 
-  const formatDate = (dateStr) => {
+  const formatDateTime = (dateStr, timeStr) => {
     if (!dateStr) return '';
     try {
-      const d = new Date(dateStr + 'T00:00:00');
-      return d.toLocaleDateString(i18n.language === 'he' ? 'he-IL' : 'en-US', {
+      const locale = i18n.language === 'he' ? 'he-IL' : 'en-US';
+      if (timeStr) {
+        const d = new Date(`${dateStr}T${timeStr}:00Z`);
+        return d.toLocaleString(locale, {
+          day: 'numeric',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+      }
+      const d = new Date(dateStr + 'T12:00:00Z');
+      return d.toLocaleDateString(locale, {
         day: 'numeric',
         month: 'short',
       });
@@ -35,6 +46,7 @@ export default function MatchCard({ match, teamsMeta, prediction, isPreferred })
 
   return (
     <div
+      ref={ref}
       className={`${styles.card} ${isPreferred ? styles.preferred : ''}`}
       onClick={() => navigate(`/match/${match.matchId}`)}
     >
@@ -44,7 +56,7 @@ export default function MatchCard({ match, teamsMeta, prediction, isPreferred })
       <div className={styles.top}>
         <StageChip stage={match.stage} />
         {match.group && <span className={styles.group}>{t('match.groupLabel')} {match.group}</span>}
-        <span className={styles.date}>{formatDate(match.date)}</span>
+        <span className={styles.date}>{formatDateTime(match.date, match.time)}</span>
       </div>
 
       <div className={styles.body}>
@@ -85,4 +97,6 @@ export default function MatchCard({ match, teamsMeta, prediction, isPreferred })
       )}
     </div>
   );
-}
+});
+
+export default MatchCard;
