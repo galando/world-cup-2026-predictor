@@ -24,7 +24,7 @@ const MatchCard = forwardRef(function MatchCard({ match, teamsMeta, prediction, 
   const formatDateTime = (dateStr, timeStr) => {
     if (!dateStr) return '';
     try {
-      const locale = i18n.language === 'he' ? 'he-IL' : 'en-US';
+      const locale = i18n.language === 'he' ? 'he-IL' : i18n.language === 'nl' ? 'nl-NL' : 'en-US';
       if (timeStr) {
         const d = new Date(`${dateStr}T${timeStr}:00Z`);
         return d.toLocaleString(locale, {
