@@ -35,7 +35,7 @@ export default function PredictionDonut({ probs }) {
         />
       </svg>
       <div className={styles.center}>
-        <span className={styles.pct}>{homePct}%</span>
+        <span className={styles.pct}>{Math.max(homePct, drawPct, awayPct)}%</span>
       </div>
     </div>
   );
