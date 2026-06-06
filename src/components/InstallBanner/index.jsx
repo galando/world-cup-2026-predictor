@@ -42,12 +42,10 @@ export default function InstallBanner() {
     const count = incrementVisit();
     const dismissed = isDismissed();
 
-    // Show after 2 visits if not dismissed
     if (count >= 2 && !dismissed) {
       setVisible(true);
     }
 
-    // Listen for beforeinstallprompt
     const handler = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -56,13 +54,22 @@ export default function InstallBanner() {
       }
     };
 
+    const onInstalled = () => {
+      setVisible(false);
+      try { localStorage.setItem(DISMISS_KEY, 'true'); } catch { /* ignore */ }
+    };
+
     window.addEventListener('beforeinstallprompt', handler);
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    window.addEventListener('appinstalled', onInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
   }, []);
 
   const handleInstall = async () => {
+    try { localStorage.setItem(DISMISS_KEY, 'true'); } catch { /* ignore */ }
     if (!deferredPrompt) {
-      // No native prompt available; just hide the banner
       setVisible(false);
       return;
     }
@@ -86,7 +93,7 @@ export default function InstallBanner() {
       <span className={styles.text}>{t('install.banner')}</span>
       <div className={styles.actions}>
         <Btn variant="primary" size="sm" onClick={handleInstall}>
-          {t('install.banner')}
+          {t('install.action')}
         </Btn>
         <button className={styles.dismiss} onClick={handleDismiss} aria-label={t('install.dismiss')}>
           <Ico name="close" size={16} />
