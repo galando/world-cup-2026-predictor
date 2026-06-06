@@ -6,8 +6,7 @@
   "nav": {
     "back": "Back",
     "settings": "Settings",
-    "home": "Home",
-    "bracket": "Bracket"
+    "home": "Home"
   },
   "home": {
     "title": "World Cup 2026",
@@ -16,7 +15,6 @@
     "filterMyTeam": "My Team",
     "filterGroup": "By Group",
     "filterStage": "By Stage",
-    "bracketBanner": "Predict the entire tournament →",
     "emptyFilter": "No matching matches",
     "teamEliminated": "Your team has been eliminated",
     "lastUpdated": "Last updated"
@@ -110,16 +108,6 @@
     "favTeamSection": "Favorite Team",
     "clearTeam": "Clear Selection",
     "noThemeTooltip": "Coming soon"
-  },
-  "bracket": {
-    "title": "Full Tournament Prediction",
-    "fillByModel": "Fill by Model",
-    "shareBracket": "Share My Bracket",
-    "myPicks": "My Picks",
-    "modelPicks": "By Model",
-    "champion": "Champion",
-    "progress": "Stages filled",
-    "resetOverrides": "Reset All"
   },
   "share": {
     "brand": "MUNDIAL PREDICTOR",
