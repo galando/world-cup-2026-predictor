@@ -120,6 +120,7 @@
   },
   "install": {
     "banner": "Add to Home Screen",
+    "action": "Add",
     "dismiss": "Not now"
   },
   "form": {
