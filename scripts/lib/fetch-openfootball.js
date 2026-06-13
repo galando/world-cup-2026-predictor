@@ -1,9 +1,17 @@
 /**
- * Fetch OpenFootball fixtures from GitHub raw CDN.
- * Parses groups.json and rounds.json from openfootball/worldcup.json repo.
+ * Fetch OpenFootball fixtures + live results from the GitHub raw CDN.
  *
- * NOTE: The 2026 repo files become available around tournament kickoff (June 11 2026).
- * Until then this fetch 404s and build-data.js falls back to the generated schedule.
+ * The openfootball/worldcup.json repo publishes the 2026 tournament as a single
+ * file at 2026/worldcup.json (a flat { name, matches[] } document that is
+ * updated with scores as games are played). The older per-section
+ * groups.json / rounds.json layout used for previous tournaments does NOT
+ * exist for 2026, which is why the previous fetch 404'd and the app fell back
+ * to a synthetic schedule with no live results.
+ *
+ * This module parses the worldcup.json schema, maps full team names to the
+ * canonical codes used across the pipeline, and emits match objects in the
+ * shape the rest of build-data.js expects (including final scores + FINISHED
+ * status for games already played).
  */
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
@@ -12,17 +20,18 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const CACHE_DIR = join(__dirname, '..', 'cache');
+const DATA_DIR = join(__dirname, '..', 'data');
 const BASE_URL = 'https://raw.githubusercontent.com/openfootball/worldcup.json/master/2026';
 
 /** Specific patterns first — 'Round of 16' contains 'Round of', so test R16 before R32. */
 function classifyStage(roundName = '') {
   const n = roundName.toLowerCase();
-  if (n.includes('round of 16'))  return 'r16';
-  if (n.includes('round of 32'))  return 'r32';
-  if (n.includes('quarter'))      return 'qf';
-  if (n.includes('semi'))         return 'sf';
+  if (n.includes('round of 16')) return 'r16';
+  if (n.includes('round of 32')) return 'r32';
+  if (n.includes('quarter'))     return 'qf';
+  if (n.includes('semi'))        return 'sf';
   if (n.includes('third') || n.includes('3rd place')) return 'third';
-  if (n.includes('final'))        return 'final';
+  if (n.includes('final'))       return 'final';
   return 'group';
 }
 
@@ -44,106 +53,121 @@ async function safeFetch(url, cacheFile, timeoutMs = 10_000) {
   }
 }
 
-/** Build name→code map from groups data so full names map to canonical codes. */
-function buildNameToCodeMap(groupsData) {
+/**
+ * Build a full-name → canonical-code map from teams-meta.json.
+ * Names are normalized (lowercased, accents stripped, '&'→'and') so that
+ * openfootball spellings like "Bosnia & Herzegovina" or "Curaçao" resolve.
+ * The code itself is also registered as an alias so "USA" maps to USA.
+ */
+function buildNameToCodeMap() {
   const map = {};
-  if (!groupsData.groups) return map;
-  for (const group of groupsData.groups) {
-    for (const team of (group.teams || [])) {
-      const code = (team.code || '').toUpperCase();
-      const name = (team.name || '').toLowerCase();
-      if (code) { map[code] = code; map[name] = code; }
-    }
+  let teamsMeta = {};
+  try {
+    teamsMeta = JSON.parse(readFileSync(join(DATA_DIR, 'teams-meta.json'), 'utf8'));
+  } catch {
+    return map;
+  }
+  for (const [code, meta] of Object.entries(teamsMeta)) {
+    map[normalizeName(code)] = code;
+    if (meta.nameEN) map[normalizeName(meta.nameEN)] = code;
   }
   return map;
 }
 
-function normalizeTeam(raw, nameToCode) {
-  if (!raw) return null;
-  const upper = String(raw).toUpperCase();
-  if (nameToCode[upper]) return nameToCode[upper];
-  const lower = String(raw).toLowerCase();
-  if (nameToCode[lower]) return nameToCode[lower];
-  if (/^[A-Z]{2,3}$/.test(upper)) return upper;
-  return raw;
+function normalizeName(raw = '') {
+  return String(raw)
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // strip accents
+    .replace(/&/g, 'and')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 }
 
 /**
- * Canonical match IDs matching FIFA 2026 numbering (group 1-72, knockout 73-104).
- * Group: 'A-1' ... 'L-6'. Knockout: 'r32-73' ... 'final-104'.
+ * Resolve an openfootball team label to a canonical code.
+ *  - Real country name        → its code (e.g. "Mexico" → "MEX")
+ *  - Group-position placeholder ("1A","2B") → kept as-is so it pairs with the
+ *    seeding/bracket placeholders the rest of the pipeline understands
+ *  - Anything else (third-place "3A/B/C/D/F", progression "W73"/"L101") → null,
+ *    resolved later by build-bracket from standings
  */
-function makeMatchId(stage, groupLetter, roundMatchNum, globalMatchNum) {
-  if (stage === 'group') return groupLetter + '-' + roundMatchNum;
-  if (stage === 'r32')   return 'r32-'   + globalMatchNum;
-  if (stage === 'r16')   return 'r16-'   + globalMatchNum;
-  if (stage === 'qf')    return 'qf-'    + globalMatchNum;
-  if (stage === 'sf')    return 'sf-'    + globalMatchNum;
-  if (stage === 'third') return 'third-' + globalMatchNum;
-  if (stage === 'final') return 'final-' + globalMatchNum;
-  return 'match-' + globalMatchNum;
+function resolveTeam(raw, nameToCode) {
+  if (raw == null) return null;
+  const key = normalizeName(raw);
+  if (nameToCode[key]) return nameToCode[key];
+  const compact = String(raw).replace(/\s+/g, '').toUpperCase();
+  if (/^[12][A-L]$/.test(compact)) return compact;
+  return null;
+}
+
+/** Normalize "13:00 UTC-6" → "13:00"; pass through clean "HH:MM"; else null. */
+function parseTime(raw) {
+  if (!raw) return null;
+  const m = String(raw).match(/\b(\d{1,2}:\d{2})\b/);
+  return m ? m[1].padStart(5, '0') : null;
 }
 
 export async function fetchOpenFootball() {
-  const groupsCache = join(CACHE_DIR, 'openfootball-groups.json');
-  const roundsCache = join(CACHE_DIR, 'openfootball-rounds.json');
+  const cacheFile = join(CACHE_DIR, 'openfootball-2026.json');
+  const doc = await safeFetch(BASE_URL + '/worldcup.json', cacheFile);
 
-  const [groupsData, roundsData] = await Promise.all([
-    safeFetch(BASE_URL + '/groups.json', groupsCache),
-    safeFetch(BASE_URL + '/rounds.json', roundsCache),
-  ]);
-
-  const nameToCode = buildNameToCodeMap(groupsData);
-  const teamGroupMap = {};
-  const groups = {};
-
-  if (groupsData.groups) {
-    for (const group of groupsData.groups) {
-      const groupLetter = (group.name || '').replace('Group ', '').trim() || group.key || '';
-      groups[groupLetter] = group.teams || [];
-      for (const team of (group.teams || [])) {
-        const code = normalizeTeam(team.code || team.name, nameToCode);
-        if (code && groupLetter) teamGroupMap[code] = groupLetter;
-      }
-    }
-  }
+  const nameToCode = buildNameToCodeMap();
+  const rawMatches = Array.isArray(doc.matches) ? doc.matches : [];
 
   const matches = [];
-  let globalMatchNum = 0;
+  const groups = {};
+  const teamGroupMap = {};
   const groupMatchCounter = {};
+  let globalMatchNum = 0;
 
-  if (roundsData.rounds) {
-    for (const round of roundsData.rounds) {
-      const stage = classifyStage(round.name);
-      for (const game of (round.games || [])) {
-        globalMatchNum++;
-        const homeCode = normalizeTeam(game.team1_code || game.team1, nameToCode);
-        const awayCode = normalizeTeam(game.team2_code || game.team2, nameToCode);
-        const groupLetter = teamGroupMap[homeCode] || teamGroupMap[awayCode] || null;
+  for (const game of rawMatches) {
+    globalMatchNum++;
+    const stage = classifyStage(game.round);
+    const groupLetter = game.group ? String(game.group).replace(/group\s*/i, '').trim() : null;
 
-        let roundMatchNum = globalMatchNum;
-        if (stage === 'group' && groupLetter) {
-          groupMatchCounter[groupLetter] = (groupMatchCounter[groupLetter] || 0) + 1;
-          roundMatchNum = groupMatchCounter[groupLetter];
+    const homeTeam = resolveTeam(game.team1_code || game.team1, nameToCode);
+    const awayTeam = resolveTeam(game.team2_code || game.team2, nameToCode);
+
+    // Track group membership for real teams (used by downstream consumers).
+    if (groupLetter) {
+      if (!groups[groupLetter]) groups[groupLetter] = [];
+      for (const code of [homeTeam, awayTeam]) {
+        if (code && /^[A-Z]{3}$/.test(code) && !teamGroupMap[code]) {
+          teamGroupMap[code] = groupLetter;
+          groups[groupLetter].push({ code });
         }
-
-        matches.push({
-          matchId: makeMatchId(stage, groupLetter, roundMatchNum, globalMatchNum),
-          date: game.date,
-          time: game.time,
-          venue: game.venue,
-          city: game.city,
-          homeTeam: homeCode,
-          awayTeam: awayCode,
-          stage,
-          score: game.score1 != null ? { home: game.score1, away: game.score2 } : null,
-          status: game.score1 != null ? 'FINISHED' : 'SCHEDULED',
-          group: groupLetter,
-        });
       }
     }
+
+    // Match id: groups use per-group sequence (A-1..L-6); knockout uses the
+    // official FIFA match number (73..104).
+    let matchId;
+    if (stage === 'group' && groupLetter) {
+      groupMatchCounter[groupLetter] = (groupMatchCounter[groupLetter] || 0) + 1;
+      matchId = `${groupLetter}-${groupMatchCounter[groupLetter]}`;
+    } else {
+      matchId = `${stage}-${game.num || globalMatchNum}`;
+    }
+
+    const ft = game.score && Array.isArray(game.score.ft) ? game.score.ft : null;
+    const hasScore = ft && ft[0] != null && ft[1] != null;
+
+    matches.push({
+      matchId,
+      date: game.date || null,
+      time: parseTime(game.time),
+      venue: game.ground || game.city || '',
+      city: game.city || '',
+      homeTeam,
+      awayTeam,
+      stage,
+      score: hasScore ? { home: ft[0], away: ft[1] } : null,
+      status: hasScore ? 'FINISHED' : 'SCHEDULED',
+      group: groupLetter,
+    });
   }
 
-  return { groups, rounds: roundsData.rounds || [], matches, teamGroupMap };
+  return { groups, matches, teamGroupMap };
 }
 
 export default fetchOpenFootball;
