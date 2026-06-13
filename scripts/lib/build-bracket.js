@@ -73,6 +73,19 @@ function resolveThirdPlaceSlot(eligibleGroups, standings) {
  * Build the complete knockout bracket.
  * Returns bracket object with all rounds populated.
  */
+/**
+ * Shape a prediction into the bracket's compact tiePredict form, or null.
+ */
+function tiePredictFrom(pred) {
+  if (!pred) return null;
+  return {
+    home: pred.probs.home,
+    draw: pred.probs.draw,
+    away: pred.probs.away,
+    qualify: pred.qualify,
+  };
+}
+
 export function buildBracket(standings, predictions, seedingData) {
   const seeding = seedingData || JSON.parse(readFileSync(SEEDING_FILE, 'utf8'));
   const predMap = new Map(predictions.map(p => [p.matchId, p]));
@@ -83,7 +96,6 @@ export function buildBracket(standings, predictions, seedingData) {
     const awayTeam = resolveSlot(match.slot2, standings);
 
     const matchId = `r32-${match.match}`;
-    const pred = predMap.get(matchId);
 
     return {
       matchId,
@@ -93,16 +105,12 @@ export function buildBracket(standings, predictions, seedingData) {
       awayTeam,
       venue: match.venue,
       date: match.date,
-      tiePredict: pred ? {
-        home: pred.probs.home,
-        draw: pred.probs.draw,
-        away: pred.probs.away,
-        qualify: pred.qualify,
-      } : null,
+      tiePredict: tiePredictFrom(predMap.get(matchId)),
     };
   });
 
-  // Build R16 matches (resolved from R32 winners)
+  // Build R16 matches (teams resolve via the live feed as R32 completes;
+  // tiePredict attaches as soon as a prediction exists for the matchId).
   const r16Matches = seeding.r16Matches.map(match => ({
     matchId: `r16-${match.match}`,
     matchNumber: match.match,
@@ -112,7 +120,7 @@ export function buildBracket(standings, predictions, seedingData) {
     fromMatches: match.from,
     venue: match.venue,
     date: match.date,
-    tiePredict: null,
+    tiePredict: tiePredictFrom(predMap.get(`r16-${match.match}`)),
   }));
 
   // Build QF matches
@@ -125,7 +133,7 @@ export function buildBracket(standings, predictions, seedingData) {
     fromMatches: match.from,
     venue: match.venue,
     date: match.date,
-    tiePredict: null,
+    tiePredict: tiePredictFrom(predMap.get(`qf-${match.match}`)),
   }));
 
   // Build SF matches
@@ -138,7 +146,7 @@ export function buildBracket(standings, predictions, seedingData) {
     fromMatches: match.from,
     venue: match.venue,
     date: match.date,
-    tiePredict: null,
+    tiePredict: tiePredictFrom(predMap.get(`sf-${match.match}`)),
   }));
 
   // Third place match
@@ -151,7 +159,7 @@ export function buildBracket(standings, predictions, seedingData) {
     fromMatches: seeding.thirdPlace.from,
     venue: seeding.thirdPlace.venue,
     date: seeding.thirdPlace.date,
-    tiePredict: null,
+    tiePredict: tiePredictFrom(predMap.get('third-103')),
   };
 
   // Final
@@ -164,7 +172,7 @@ export function buildBracket(standings, predictions, seedingData) {
     fromMatches: seeding.final.from,
     venue: seeding.final.venue,
     date: seeding.final.date,
-    tiePredict: null,
+    tiePredict: tiePredictFrom(predMap.get('final-104')),
   };
 
   return {

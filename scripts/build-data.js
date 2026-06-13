@@ -160,9 +160,22 @@ async function main() {
     // Step 8: Build standings + bracket
     console.log('[12/15] Building standings and bracket...');
     const standings = buildStandings(matches, teamsMeta);
-    const bracket = buildBracket(standings, predictions, seedingData);
+    let bracket = buildBracket(standings, predictions, seedingData);
     console.log(`  Built standings for ${Object.keys(standings.groups).length} groups`);
     console.log(`  Advancing 3rd-place teams: ${standings.advancingThirdPlace.length}`);
+
+    // Step 8.5: Backfill knockout-tie predictions from the resolved bracket.
+    // The bracket resolves knockout matchups from live standings (e.g. R32
+    // "1A vs 2B" -> KOR vs BIH) before the feed publishes the concrete fixture.
+    // Predict those resolved ties so each tie carries the same win/draw/win odds
+    // as a group match, updating as the group order shifts. Ties already
+    // predicted from the feed are skipped, then the bracket is rebuilt so its
+    // tiePredict picks up the new predictions.
+    const koAdded = backfillKnockoutPredictions(bracket, teams, predictions, suspensionMap, marketMap);
+    if (koAdded > 0) {
+      console.log(`  Backfilled ${koAdded} knockout-tie predictions from standings`);
+      bracket = buildBracket(standings, predictions, seedingData);
+    }
 
     // Step 9: Run Monte Carlo simulation (optional, graceful)
     console.log('[13/15] Running Monte Carlo simulation...');
@@ -227,6 +240,40 @@ async function main() {
     console.error(err);
     process.exit(1);
   }
+}
+
+/**
+ * Generate predictions for knockout ties whose teams are resolved in the
+ * bracket (from standings) but not yet present in the predictions list.
+ * Mutates `predictions` in place and returns the number of predictions added.
+ */
+function backfillKnockoutPredictions(bracket, teams, predictions, suspensionMap, marketMap) {
+  const predicted = new Set(predictions.map(p => p.matchId));
+  const ties = [];
+
+  for (const round of Object.values(bracket.rounds)) {
+    for (const tie of round) {
+      if (predicted.has(tie.matchId)) continue;
+      if (!tie.homeTeam || !tie.awayTeam) continue;
+      if (!teams[tie.homeTeam] || !teams[tie.awayTeam]) continue;
+      ties.push({
+        matchId: tie.matchId,
+        stage: tie.round,
+        homeTeam: tie.homeTeam,
+        awayTeam: tie.awayTeam,
+        venue: tie.venue,
+        date: tie.date,
+        group: null,
+        status: 'SCHEDULED',
+        score: null,
+      });
+    }
+  }
+
+  if (ties.length === 0) return 0;
+  const koPredictions = runPredictions(ties, teams, suspensionMap, marketMap);
+  predictions.push(...koPredictions);
+  return koPredictions.length;
 }
 
 /**
