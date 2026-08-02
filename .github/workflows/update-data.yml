@@ -1,9 +1,7 @@
 name: Update Match Data
 
 on:
-  schedule:
-    - cron: '*/30 * * * *'   # every 30 min during tournament
-  workflow_dispatch:            # manual trigger for testing
+  workflow_dispatch:            # manual trigger only; tournament is over, no scheduled runs
 
 jobs:
   build:
